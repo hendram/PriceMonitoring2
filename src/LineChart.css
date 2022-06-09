@@ -1,0 +1,14 @@
+.linechart_path {
+  stroke-width: 3; 
+  stroke: red;      
+}
+.linechart_circle {
+  stroke-width: 1;
+  fill: yellow;
+  stroke: yellow;
+}
+.linechart_xtext {
+  fill: blue;
+ 
+}
+
