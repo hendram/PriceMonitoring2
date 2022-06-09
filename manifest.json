@@ -1,0 +1,32 @@
+{ 
+    "version": "1.0",
+    "manifest_version": 3,
+    "name": "pricemonext",
+    "description": "Sync jumlah barang dan harga",
+    "icons": {
+       "128": "icon128.png",
+       "48": "icon48.png"
+    },
+    "action": {
+      "default_popup": "popup.html"
+      },
+ "content_scripts": [
+      {
+        "matches": ["https://web.whatsapp.com/*"],
+        "js": ["wadispatch.js"]
+}
+],
+
+      "permissions": [
+        "tabs",
+        "notifications",
+        "scripting"
+ ],
+  "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+            ],
+  "content_security_policy": {
+    "extention_pages": "script-src 'self' 'unsafe-eval'; object-src 'self'; script-src-elem 'self' 'unsafe-inline'"
+}
+}
