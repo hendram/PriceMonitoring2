@@ -100,9 +100,12 @@ all.length = 0;
           
 
 static forloopgraph(graph, allk) {
-           const minutes = new Date();
+           const timenow = new Date();
            graph.push(allk);
-           graph.push(minutes.getMinutes());
+            let hours = timenow.getHours();
+            let minutes = timenow.getMinutes();
+            let combhm = hours + ":" + minutes;
+           graph.push(combhm);
             }
 
 

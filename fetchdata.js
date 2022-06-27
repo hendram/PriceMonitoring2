@@ -11,36 +11,7 @@ const singleton = require('./Singleton');
 const single = singleton.getInstance();
 
  
-const fromuser = [{chain: "polygon", dex: "quickswap", pricein: 10000,
-tokenname1: "USDC", tokenaddress1: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-digit1: 6, tokenname2: "WETH", 
-tokenaddress2: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', digit2:18},
-{chain: "polygon", dex: "quickswap", pricein: 10000,
-tokenname1: "USDC", tokenaddress1: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-digit1: 6, tokenname2: "WMATIC", 
-tokenaddress2: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', digit2:18},
-{chain: "polygon", dex: "quickswap", pricein: 10000, 
-tokenname1: "USDC", tokenaddress1: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-digit1:6, tokenname2: "UNI", 
-tokenaddress2: '0xb33EaAd8d922B1083446DC23f610c2567fB5180f', digit2: 18},
-{chain: "polygon", dex: "quickswap", pricein: 10000, 
-tokenname1: "USDC", tokenaddress1: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-digit1:6, tokenname2: "PEAR", 
-tokenaddress2:  '0xc8bcb58caEf1bE972C0B638B1dD8B0748Fdc8A44', digit2: 18},
-{chain: "bsc", dex: "pancakeswap", pricein: 100, 
-tokenname1: "BUSD", tokenaddress1: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
-digit1: 18, tokenname2: "WBNB", 
-tokenaddress2: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', digit2: 18}]
-
-
-
-
-//Masukkan harga awal beli di sini
-/*const pricein = {"WETH": "1697.02", "WMATIC": "0.56484", "UNI": "0.016179", 
-"PEAR": "0.000902"}
-
-const priceinjson = JSON.parse(JSON.stringify(pricein));
-*/
+const fromuser = [];
 
 app.use('/', express.static('../pricemongui/build'));
 
@@ -54,11 +25,13 @@ for(let k=0; k < fromuser.length; k++){
     FetchToken1Token2.countbsc = FetchToken1Token2.countbsc + 1;
 }
 }
+
+
            for(let u = 0; u < fromuser.length; u++){
              let innow = new FetchToken1Token2(fromuser[u].chain,
 fromuser[u].dex, fromuser[u].tokenname1, fromuser[u].tokenname2, 
 fromuser[u].tokenaddress1, fromuser[u].tokenaddress2, fromuser[u].digit1, 
-fromuser[u].digit2, fromuser[u].pricein, single);
+fromuser[u].digit2, fromuser[u].pricein, single); 
    innow.runfuncswap();
      
 }      
@@ -113,12 +86,29 @@ console.log("connect ws");
       let newmessage = message.toString();
        let barumessage = JSON.parse(newmessage);
 
-if(barumessage.status === "disconnectgui"){
-     single.removeListener('sendgraphpolygonquick');
+if(barumessage.datanya){
+   for(let t = 0; t < barumessage.datanya.length; t++){
+  let dataToken = {
+chain: barumessage.datanya[t].chain, 
+dex: barumessage.datanya[t].dex,
+pricein: barumessage.datanya[t].pricein, 
+tokenname1: barumessage.datanya[t].tokenname1,
+tokenaddress1: barumessage.datanya[t].tokenaddress1, 
+digit1: barumessage.datanya[t].digittoken1,
+tokenname2: barumessage.datanya[t].tokenname2,
+tokenaddress2: barumessage.datanya[t].tokenaddress2, 
+digit2: barumessage.datanya[t].digittoken2,
 }
 
+      fromuser.push(JSON.parse(JSON.stringify(dataToken)));
+             }
+}
 
 if(barumessage.messagenya === "fromgui"){
+
+
+setInterval(keepalivefunc, 5000);
+setInterval(runningnow, 30000);
 
 const graphaccept = (arg) => {
 if(arg === FetchToken1Token2.graphpolygonquick){
@@ -133,19 +123,14 @@ else if(arg === FetchToken1Token2.graphbscpancake){
 
 let countgraphsingle = single.listenerCount('sendgraph', 
 graphaccept);
-console.log("jumlah awal " + countgraphsingle);
 if(countgraphsingle < 1){
   
 single.on('sendgraph', graphaccept);
 }
-}
 
-if(barumessage.messagenya === "fromext"){
 
-setInterval(keepalivefunc, 5000);
-setInterval(runningnow, 30000);
 
-single.on("keepaliveevent", function(){
+const keeps = () => {
 let keep = {"message": "alivenow"};
 
 wssx.clients.forEach(function(client) {
@@ -153,7 +138,19 @@ wssx.clients.forEach(function(client) {
         client.send(JSON.stringify(keep));
 }});
 console.log(JSON.stringify(keep));
-});
+};
+
+
+let countkeepalive = single.listenerCount('keepaliveevent', keeps);
+if(countkeepalive < 1){
+  
+single.on('keepaliveevent', keeps);
+}
+
+
+}
+
+if(barumessage.messagenya === "fromext"){
 
 
 single.on('sendwa', function(arg){
