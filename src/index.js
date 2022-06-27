@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MyGraph from './MyGraph.js';
+import MainPage from './MainPage.js';
 import './index.css';
 
 ReactDOM.render(
-    <MyGraph />,
+    <MainPage />,
 document.getElementById('root')
 );
 

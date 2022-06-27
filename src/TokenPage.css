@@ -1,0 +1,35 @@
+
+.divTokenpage {
+   width: auto;
+   height: auto;
+   display: block;
+   border-style: solid;
+   border-radius: 8px;
+   border-width: 5px;
+   border-color: blue;
+   background-color: green;
+   
+}
+
+.labeling {
+  font-size: x-large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 600;
+}
+
+.buttoncancel {
+  font-size: x-large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 600;
+  border-radius: 3px;
+  color: red;
+}
+
+.buttonsubmit {
+  font-size: x-large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 600;
+  border-radius: 3px;
+  color: red;
+}
+

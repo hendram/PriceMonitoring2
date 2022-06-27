@@ -2,6 +2,11 @@
   stroke-width: 3; 
   stroke: red;      
 }
+.linechart_profit {
+  stroke-width: 1;
+  fill: green;
+  stroke: green;
+}
 .linechart_circle {
   stroke-width: 1;
   fill: yellow;

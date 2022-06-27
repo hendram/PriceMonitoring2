@@ -8,6 +8,8 @@ console.log(props.data.length);
 console.log(props.data[5]);
 let c;
 let ydata;
+let testcallpr = props.namatoken;
+console.log(testcallpr);
 
 if(props.data.length > 1){
   // GET MAX & MIN Y
@@ -23,6 +25,7 @@ parseFloat(data[0].x).toString().length);
 }
   } */
 function  getLabelMinX() {
+    
     const data = props.data;
     return data.reduce((min, p) => parseFloat(p.x) < min ? parseFloat(p.x) :
  min, parseFloat(data[0].x));
@@ -64,16 +67,18 @@ x2={p+50} y2={ydata +10}
              <text x={p} 
 y={ydata + 20} fill="blue" 
 transform={rot}>
-{k} </text> 
-            </g> );
+{k} </text>
+             <text x={100} 
+y={ydata + 20} fill="black" >{props.tokenacuan}/{props.namatoken}
+ </text>
+ 
+</g>);
 }
 
 
 for(let a=(w === 0 ? ((2 * maxpoint) + 50) :
- (props.data.length * maxpoint) + 50) ; a > 50 ; 
-a=a-50){
+ ((props.data.length * maxpoint) + 50)) ; a > 50 ; a=a-50){
 
-console.log("nilai a" + a);
    if(w === 0){
     let z = (getLabelMaxX() + ((20/100)*getLabelMaxX()));
   let b = z/2; 
@@ -83,13 +88,6 @@ console.log("nilai a" + a);
 let b = w/props.data.length; 
      c = getLabelMinX()+b*((((props.data.length * maxpoint) + 50) - a)/50);
 }
-    
-/* 
-   
-let ytext = (w === 0 ? ( 2 * maxpoint) + 50 - (a === 150 ? 0 : 50) :
-((props.data.length * maxpoint) + 50) - 
-50*(((props.data.length * maxpoint) + 50) - a/50));
-*/
 
    
 
@@ -124,11 +122,20 @@ else{
        let final = n*50;
          keepfinal.push(((props.data.length * maxpoint) + 50)-final);
      }
-   
+      
     linenya.push(<g key={j}> 
-    <circle cx={j} cy={keepfinal[l]} r="6"   
+
+    { 
+parseFloat(props.priceawal) < parseFloat(props.data[l].x) ?
+          <circle cx={j} cy={keepfinal[l]} r="6"   
+className="linechart_profit"/> 
+     :
+ <circle cx={j} cy={keepfinal[l]} r="6"   
 className="linechart_circle"/>
-     { (j-50)-50 === 0 ? 
+}
+
+     {
+ (j-50)-50 === 0 ? 
       <line  x1={j}  
             y1={keepfinal[l]} 
             x2={j} 
@@ -156,7 +163,7 @@ return(
 
 else {  
   return (
-     <> Test dulu goblok
+     <> Waiting at least two points in graphics
 
 </>
    );
