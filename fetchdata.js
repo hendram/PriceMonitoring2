@@ -12,30 +12,50 @@ const single = singleton.getInstance();
 
  
 const fromuser = [];
+let insidefor = "false";
 
 app.use('/', express.static('../pricemongui/build'));
 
 function runningnow(){
+             let datenow = Date.now();
 
+//Comparing length of polygon with countpolygon 
 for(let k=0; k < fromuser.length; k++){
-   if(fromuser[k].chain === "polygon"){
+// Counting interval time need to run next code
+       if(((fromuser[k].milisecondselapse * fromuser[k].ntimes)
++ fromuser[k].currentts) <= datenow){
+     console.log('milisecondsel' +fromuser[k].milisecondselapse);
+     console.log('ntimes' +fromuser[k].ntimes);
+    console.log('currentts' + fromuser[k].currentts);
+     console.log('datenow' + datenow);
+
+   if(fromuser[k].chain === "Polygon"){
     FetchToken1Token2.countpolygon = FetchToken1Token2.countpolygon + 1;
 }     
-    else if(fromuser[k].chain === "bsc"){
+    else if(fromuser[k].chain === "Bsc"){
     FetchToken1Token2.countbsc = FetchToken1Token2.countbsc + 1;
+}
 }
 }
 
 
            for(let u = 0; u < fromuser.length; u++){
-             let innow = new FetchToken1Token2(fromuser[u].chain,
+
+          if(((fromuser[u].milisecondselapse * fromuser[u].ntimes)
++ fromuser[u].currentts) <= datenow){
+                 fromuser[u].ntimes = fromuser[u].ntimes + 1;
+
+              innow = new FetchToken1Token2(fromuser[u].chain,
 fromuser[u].dex, fromuser[u].tokenname1, fromuser[u].tokenname2, 
 fromuser[u].tokenaddress1, fromuser[u].tokenaddress2, fromuser[u].digit1, 
-fromuser[u].digit2, fromuser[u].pricein, single); 
+fromuser[u].digit2, fromuser[u].pricein, single);
    innow.runfuncswap();
-     
+
+     }
 }      
+
 }
+
 
 function arggraph(arg, wssx, wss){
 for(let v=0; v < arg.length; v=v+2){
@@ -44,6 +64,7 @@ let graphsend = {"price": arg[v],
 
 wssx.clients.forEach(function(client) {
       if (client.readyState === wss.OPEN) {
+        console.log('dikirimkan' + graphsend);
         client.send(JSON.stringify(graphsend));
 }});
 };
@@ -86,8 +107,17 @@ console.log("connect ws");
       let newmessage = message.toString();
        let barumessage = JSON.parse(newmessage);
 
+if(barumessage.deleteall){
+    fromuser.length = 0;
+}
+
+if(barumessage.deleteone){
+    fromuser.splice(barumessage.deleteone, 1);
+}
+
 if(barumessage.datanya){
    for(let t = 0; t < barumessage.datanya.length; t++){
+
   let dataToken = {
 chain: barumessage.datanya[t].chain, 
 dex: barumessage.datanya[t].dex,
@@ -98,21 +128,26 @@ digit1: barumessage.datanya[t].digittoken1,
 tokenname2: barumessage.datanya[t].tokenname2,
 tokenaddress2: barumessage.datanya[t].tokenaddress2, 
 digit2: barumessage.datanya[t].digittoken2,
+milisecondselapse: barumessage.datanya[t].milisecondselapse,
+currentts: barumessage.datanya[t].currentts,
+ntimes: barumessage.datanya[t].ntimes
 }
 
       fromuser.push(JSON.parse(JSON.stringify(dataToken)));
              }
+console.log("print dari fromuser" + fromuser[0]);
 }
 
 if(barumessage.messagenya === "fromgui"){
 
 
 setInterval(keepalivefunc, 5000);
-setInterval(runningnow, 30000);
+setInterval(runningnow, 5000);
 
 const graphaccept = (arg) => {
 if(arg === FetchToken1Token2.graphpolygonquick){
    arggraph(arg, wssx, wss);
+   console.log('panjang arg' + arg.length);
    arg.length = 0;
 }
 else if(arg === FetchToken1Token2.graphbscpancake){

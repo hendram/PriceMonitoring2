@@ -72,7 +72,7 @@ FetchToken1Token2.priceinbscpancake);
 }
 }
 
-
+// processing for graph and wa loop
 static arg1arg2(arg, graph, wa, all, pricein) {       
      console.log("ini length dari all" + all.length);
            for(let k=0; k < all.length; k++){
@@ -104,7 +104,8 @@ static forloopgraph(graph, allk) {
            graph.push(allk);
             let hours = timenow.getHours();
             let minutes = timenow.getMinutes();
-            let combhm = hours + ":" + minutes;
+            let seconds = timenow.getSeconds();
+            let combhm = hours + ":" + minutes + ":" + seconds;
            graph.push(combhm);
             }
 
@@ -120,48 +121,63 @@ static forloopwa(wa, index, pricein, all) {
 fetchtok1tok2 = async (chain, dex, tokenname1, tokenname2,tokenadd1, tokenadd2, 
 digit1, digit2) => {
 
+try{
 let token1token2 = undefined;
 console.log("chain" + chain);
 console.log("dex" + dex);
 
-if(chain === "polygon" && dex === "quickswap"){
+
+if(chain === "Polygon" && dex === "Quickswap"){
    token1token2 = new PolygonQuick(tokenadd1, tokenadd2, digit1, digit2);
 }
-if(chain === "bsc" && dex === "pancakeswap"){
+if(chain === "Bsc" && dex === "Pancakeswap"){
    token1token2 = new BSCPancake(tokenadd1, tokenadd2, digit1, digit2);
 }
 
    const taketoken1token2 =  await token1token2.fetchToken1Token2();
+
    const resulttoken1token2 = taketoken1token2.replace("Token1", tokenname1); 
    const result2token1token2 =  resulttoken1token2.replace("Token2", 
 tokenname2);
 
-if(chain === "polygon" && dex === "quickswap"){
+
+
+if(chain === "Polygon" && dex === "Quickswap"){
 FetchToken1Token2.priceinpolygonquick.push(this.pricein);
 FetchToken1Token2.allpolygonquick.push(result2token1token2)
 }
-else if(chain === "bsc" && dex === "pancakeswap"){
+else if(chain === "Bsc" && dex === "Pancakeswap"){
 FetchToken1Token2.priceinbscpancake.push(this.pricein);
 FetchToken1Token2.allbscpancake.push(result2token1token2)
 }
    console.log(result2token1token2);
    console.log(FetchToken1Token2.countpolygon);
-if(chain === "polygon" && dex === "quickswap"){
+
+// countpolygon will be use to wait allpolygonquick.length equal before 
+// next process
+
+if(chain === "Polygon" && dex === "Quickswap"){
 if(FetchToken1Token2.countpolygon == FetchToken1Token2.allpolygonquick.length){
  FetchToken1Token2.callsingleon();
 FetchToken1Token2.single.emit('graphwasignal', 'polygonquick');
 }
 }
 
-else if(chain === "bsc" && dex === "pancakeswap"){
+else if(chain === "Bsc" && dex === "Pancakeswap"){
 if(FetchToken1Token2.countbsc == FetchToken1Token2.allbscpancake.length){
  FetchToken1Token2.callsingleon();
 
 FetchToken1Token2.single.emit('graphwasignal', 'bscpancake');
 }
 }
+
 }
- 
+catch(error){
+console.error(error);
+}
+} 
+
+
 
 }
 
