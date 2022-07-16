@@ -1,0 +1,17 @@
+.toprightdiv {
+  width: fit-content;
+  height: fit-content;
+  padding-bottom: 15px;
+}
+
+.buttonsmall {
+  border-radius: 5px;
+  border-color: black;
+  background-color: blue;
+  font-family: serif;
+  
+}
+
+
+
+

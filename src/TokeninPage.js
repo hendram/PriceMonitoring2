@@ -1,5 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import TokenPage from './TokenPage';
+import Tokeninputask from './Tokeninputask';
+import './TokeninPage.css';
 
 const TokeninPage = (props) => {
 
@@ -7,14 +9,17 @@ const [arrTokenpage, setArrTokenpage] = useState([]);
 const [arrdatatoken, setArrdatatoken] = useState([]);
 const [ticketings, setTicketings] = useState([]);
 const [number, setNumber] = useState();
-const tokenin = useRef(null);
+
 
 const eachtokendata = (input) => {
    setArrdatatoken(arrdatatoken => [...arrdatatoken, input]);
 }
 
+let divtokeninpage = "";
+
 console.log("arrdatatoken" + arrdatatoken.length);
 
+const [tokeninputaskvis, setTokeninputaskvis] = useState("tokeninputasksh");
 
 
 const numlist = (num) => {
@@ -33,12 +38,13 @@ ticketings.filter((i) => i !== number));
     
        setArrTokenpage((arrTokenpage) => arrTokenpage.filter((i) => 
 arrTokenpage.indexOf(i) !== indexnya)); 
-
+       
+        let newnumber = number;
+          newnumber = "";
+         setNumber(newnumber);
 }
 
-
-
-
+console.log('nomor numbernya' + number);
 
 if(arrTokenpage.length === 0 && arrdatatoken.length !== 0){
    props.provdatprop(arrdatatoken);
@@ -49,30 +55,45 @@ if(arrTokenpage.length === 0 && arrdatatoken.length !== 0){
 
 useEffect(() => { stupidreact() }, [number]);
 
-const handleClick = (event) => {
-          event.preventDefault();
+const handleClick = (valuenumber) => {
 
-     if(tokenin.current.value){
-    console.log(tokenin.current.value);
-     for(let x = 0; x < tokenin.current.value; x++){
+       for(let x = 0; x < valuenumber; x++){
         setTicketings(ticketings => [...ticketings, x]);
         setArrTokenpage(arrTokenpage => 
 [...arrTokenpage,<div key={x} ><TokenPage id={x} eachtoken={eachtokendata} 
 numberlist={numlist} /><br></br> </div>]);
          }
+
+       let newtokeninputaskvis = tokeninputaskvis;
+             newtokeninputaskvis = "tokeninputaskhid";
+        setTokeninputaskvis(newtokeninputaskvis);
+
 }
+
+useEffect(() => {
+if(props.addprop === "yes"){
+   divtokeninpage = "tokeninpagetop";
+    let newtokeninputaskvis = tokeninputaskvis;
+             newtokeninputaskvis = "tokeninputasksh";
+        setTokeninputaskvis(newtokeninputaskvis);
+   
 }
+else if(props.addprop === "no") {
+   divtokeninpage ="tokeninpagebottom";
+}
+}, [props.addprop]);
 
 
 return(
-<>
-   <label>How many Token to monitor ?</label>
-   <input type="text" size="5" ref={tokenin} /> 
-   <button type="button" size="10" onClick={(e) => handleClick(e)}>
-    Submit</button>
-   
+<div className={divtokeninpage}>
+  <div className={tokeninputaskvis}>
+ <Tokeninputask 
+handleClicking={handleClick}  passtokinput={props.addprop} />
+  </div>
+   <div>
    {arrTokenpage}
-</>
+   </div>
+</div>
 )
 }
 

@@ -1,35 +1,243 @@
-
 .divTokenpage {
    width: auto;
    height: auto;
-   display: block;
+   display: flex;
+   flex-direction: column;
    border-style: solid;
    border-radius: 8px;
    border-width: 5px;
    border-color: blue;
    background-color: green;
-   
+   padding-top: 2%;
+   padding-left: 2%;
+   padding-right: 2%;
+   padding-bottom: 2%;   
+}
+
+.divrow1 {
+   display: flex;
+   flex-direction: row;
+   flex-basis: 100%;
+   height: fit-content;
+   padding-bottom: 2%;
+}
+
+.divrow2 {
+   display: flex;
+   flex-direction: row;
+   flex-basis: 100%;
+   height: fit-content;
+   padding-bottom: 2%;
+}
+
+
+.divrow3 {
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+   height: fit-content;
+   padding-bottom: 2%;
+}
+
+.divrow4 {
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+   height: fit-content;
+   padding-bottom: 2%;
+}
+
+.divrow5 {
+   display: flex;
+   flex-direction: row; 
+    width: 100%;
+   height: fit-content;
+   padding-bottom: 2%;
+}
+
+.chainspan {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+.chainselect {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 20%;
+}
+
+.dexspan {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+.dexselect {
+  width:fit-content;
+  height: fit-content;
+}
+
+.priceinspan {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+.priceininput {
+ width:fit-content;
+  height: fit-content;
+  padding-right: 2%;
+}
+
+.intervalspan {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 2%;
+}
+
+.hoursselect {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+
+.hoursspan {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 2%;
+}
+
+
+.minutesselect {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+
+.minutesspan {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 2%;
+}
+
+
+.secondsselect {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+
+.secondsspan {
+  width:fit-content;
+  height: fit-content;
+  padding-right: 2%;
+}
+
+
+.tokenname1span {
+ width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+.tokenname1input {
+ width:fit-content;
+  height: fit-content;
+  padding-right: 2%;
+}
+
+.tokenaddress1span {
+ width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+.tokenaddress1input {
+ width:fit-content;
+  height: fit-content;
+padding-right: 2%;
+}
+
+.digittoken1span {
+ width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+.digittoken1input {
+ width:fit-content;
+  height: fit-content;
+}
+
+.tokenname2span {
+ width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+.tokenname2input {
+ width:fit-content;
+  height: fit-content;
+  padding-right: 2%;
+}
+
+.tokenaddress2span {
+ width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+.tokenaddress2input {
+ width:fit-content;
+  height: fit-content;
+padding-right: 2%;
+}
+
+.digittoken2span {
+ width:fit-content;
+  height: fit-content;
+  padding-right: 1%;
+}
+
+.digittoken2input {
+ width:fit-content;
+  height: fit-content;
+}
+
+.buttoncanceldiv {
+ width:fit-content;
+  height: fit-content;
+padding-right: 2%;
+}
+
+.buttonsubmitdiv {
+ width:fit-content;
+  height: fit-content;
 }
 
 .labeling {
-  font-size: x-large;
+  font-size: large;
   font-family: "Times New Roman", Times, serif;
-  font-weight: 600;
+  font-weight: 250;
 }
 
 .buttoncancel {
-  font-size: x-large;
+  font-size: large;
   font-family: "Times New Roman", Times, serif;
-  font-weight: 600;
-  border-radius: 3px;
+  font-weight: 250;
+  border-radius: 10px;
   color: red;
 }
 
 .buttonsubmit {
-  font-size: x-large;
+  font-size: large;
   font-family: "Times New Roman", Times, serif;
-  font-weight: 600;
-  border-radius: 3px;
+  font-weight: 250;
+  border-radius: 10px;
   color: red;
 }
 

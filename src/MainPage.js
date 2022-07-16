@@ -1,80 +1,81 @@
-import React, {useState, useEffect} from 'react';
-import TokeninPage from './TokeninPage';
-import LineGPage from './LineGPage';
+import React, {useState} from 'react';
+import WalletConnection from './WalletConnection.js';
+import GraphicsView from './GraphicsView.js';
+import MonitorView from './MonitorView.js';
+import './MainPage.css';
 
 const MainPage = () => {
 
-    
+const [walletconn, setWalletconn] = useState({vis: "walletconnhid"});
+const [graphicsviewdiv, setGraphicsviewdiv] = useState({
+togglegv: "graphicsviewhid", yesno: "no"});
+const [monitorviewdiv, setMonitorviewdiv] = useState({
+togglemon: "monitorviewsh" });
 
-const [dataarr, setDataarr] = useState([]);
+const addginit = (initval) => {
+          if(initval === "yes"){
+       let newgraphicsviewdiv = {togglegv: "graphicsviewsh", yesno: "no"};
+            setGraphicsviewdiv(newgraphicsviewdiv);
 
-const providedata = (arg) => {
-    let arrreplace = [...dataarr];
-    arrreplace = arg;
-    setDataarr(arg);
+}
 }
 
-const [pageview, setPageview] = useState(<TokeninPage
- provdatprop={providedata} addprop={"no"} /> );
-// const [linegview, setLinegview] = useState("");
+const handleConnect = (event) => {
+   event.preventDefault();
+   let newwalletconn = walletconn;
+    newwalletconn = {vis: "walletconnsh"};
+    setWalletconn(newwalletconn);
+}
 
-console.log("dataarr" + dataarr.length);
+const handleClickgv = (event) => {
+       event.preventDefault();
 
+       if(graphicsviewdiv.togglegv === "graphicsviewhid"){
+     let newgraphicsviewdiv = {togglegv: "graphicsviewsh", yesno: "no"};
+            setGraphicsviewdiv(newgraphicsviewdiv);
+ let newmonitorviewdiv = {togglemon: "monitorviewhid"};   
+    setMonitorviewdiv(newmonitorviewdiv);
 
-const emptydataarr = () => {
-  if(dataarr.length !== 0){
-     let dataarrnew = [...dataarr];
-     dataarrnew.length = 0;
-     setDataarr(dataarrnew);
-   
+         }
+
+       if(graphicsviewdiv.togglegv === "graphicsviewsh"){
+   let newgraphicsviewdiv = {togglegv: "graphicsviewsh", yesno: "yes"};
+            setGraphicsviewdiv(newgraphicsviewdiv);
+}
+}
+
+const handleClickmon = (event) => {
+    event.preventDefault();
+    let newmonitorviewdiv = {togglemon: "monitorviewsh"};   
+    setMonitorviewdiv(newmonitorviewdiv);
+
+ let newgraphicsviewdiv = {togglegv: "graphicsviewhid", yesno: "no"};
+            setGraphicsviewdiv(newgraphicsviewdiv);
+         }
      
-}
-}
-
-
-const checkdataarr = () => {
-/*if(dataarr.length !== 0 && linegview === ""){
-          let lineview = linegview;
-              lineview = >;
-         
-       setLinegview(lineview);
-} */
-if(dataarr.length !== 0){
-        let pageviewnew = pageview;
-           pageviewnew = "";
-          setPageview(pageviewnew);
-}
-}
-
-    console.log("arg " + dataarr.length);
-
-
-useEffect(() => {
-   checkdataarr();
-}, [dataarr[0]]);
-
-
-const addg = () => {
-    let pageviewnew = pageview;
-     pageviewnew = <TokeninPage  provdatprop={providedata} 
-addprop={"yes"}  />;
-     setPageview(pageviewnew);
-}
-
 
 return(
-  <>
-<div>
-<p onClick={(e) => addg(e)}>Add Graph</p>
+<>
+<div className="bannerdiv">
+<span onClick={(e) => handleClickmon(e)} className="monitoring">Monitoring
+</span>
+<span onClick={(e) => handleClickgv(e)} className="addgraph">Add Graph</span>
+
+<button size="30" className="buttonconnect"
+onClick={(e) => handleConnect(e)} > Connect </button>
+
 </div>
-<div>
-   {pageview}
-   <LineGPage datalinegpage={dataarr} 
-emptydata={emptydataarr}/>
+<div className={monitorviewdiv.togglemon} >
+<MonitorView />
 </div>
+<div className={graphicsviewdiv.togglegv}>
+<GraphicsView addg={graphicsviewdiv.yesno} returnback={addginit}/>
+</div>
+<div className={walletconn.vis}>
+<WalletConnection />
+ </div>
 </>
 )
-
 }
 
 export default MainPage;
