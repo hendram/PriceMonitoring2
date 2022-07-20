@@ -1,20 +1,51 @@
-
-.bannerdiv {
+.topimagediv {
    position: absolute;
    display: inline-block;
    top: 0px;
    width: 100%;
-   height: 5%;
-   background-color: maroon;
- 
+   height: 25%;
+}
+
+.topimageimg {
+  width: 100%;
+  height: 100%;
+}
+
+.bannerdiv {
+   position: absolute;
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap; 
+   align-items: center;
+   gap: 7%;
+   top: 25%;
+   width: 100%;
+   height: 6%;
+   background-color: #e8132c;
+    
+}
+
+.monitoringdiv {
+   width: fit-content;
+   height: fit-content;
+   margin-left: 5%;
+}
+
+.monitoring {
+  color: #13e8cf;
+   font-size: x-large;
+   font-family: serif;
+}
+
+
+.addgraphdiv {
+   display: inline;
+   height: fit-content;
 }
 
 .addgraph {
-   position: absolute;   
-   top: 30%;
-   left: 10%;
-   color: blue;
-   font-size: 50;
+   color: #13e8cf;
+   font-size: x-large;
    font-family: serif;
 }
 
@@ -23,7 +54,7 @@
 }
 
 .graphicsviewsh {
-   display: inline;
+   display: inline; /* default for inline is width:100% height: fit-content */
 }
 
 .monitorviewhid {
@@ -34,14 +65,20 @@
    display: inline;
 }
 
+.buttonconnectdiv {
+   width: fit-content;
+   height: fit-content;
+   margin-left: auto;
+   margin-right: 5%;
+}
+
+
 .buttonconnect {
-   position: absolute;
-   top: 30%;   
-   right: 10%;
    border-radius: 10px;
-   color: red;
+   color: #1618ed;
+   font-size: x-large;
    font-family: serif;
-   background-color: yellow;
+   background-color: #edeb16;
 }
 
 .walletconnhid {

@@ -52,7 +52,7 @@ graphicsviewdiv: "divtokeninpagebottom" };
 
 useEffect(() => {
    checkdataarr();
-}, [dataarr[0]]);
+}, [JSON.stringify(dataarr)]);
 
 useEffect(() => {
 if(props.addg === "yes") {

@@ -2,18 +2,14 @@
 .divlchartdata {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
+  width: fit-content;
   height: fit-content;
 }
 
 .lchartgr {
   display: flex;
   flex-direction: column;
-  margin-top: 2%;
-  margin-left: 3%;
-  margin-right: 0%;
-  margin-bottom: 0%;
+  align-items: flex-end;
   width: fit-content;
   height: fit-content;
   border: 1px solid black;

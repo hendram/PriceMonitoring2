@@ -1,0 +1,66 @@
+.divalinechart {
+ width: fit-content;
+ height: fit-content;
+}
+
+.divblinechart {
+   width: fit-content;
+ height: fit-content;
+}
+
+.linechart_graphics {
+   stroke-width: 3;
+   stroke: red;
+}
+
+.linechart_pathx1 {
+  stroke-width: 3;
+  stroke: red;      
+  stroke-linecap: round; 
+}
+
+.linechart_pathx2 {
+  stroke-width: 2;
+  stroke: red;      
+  stroke-linecap: round; 
+}
+
+.linechart_pathy1 {
+  stroke-width: 3; 
+  stroke: red;      
+  stroke-linecap: round;
+}
+
+.linechart_pathy2 {
+  stroke-width: 2;
+  stroke: red;      
+  stroke-linecap: round; 
+}
+
+.linechart_profit {
+  stroke-width: 1;
+  fill: green;
+  stroke: green;
+}
+.linechart_circle {
+  stroke-width: 1;
+  fill: yellow;
+  stroke: yellow;
+}
+.linechart_xtext {
+  fill: blue;
+}
+
+.colorleg1 {
+  border-color: black;
+  fill: yellow;
+  border-width: 2px;
+}
+
+.colorleg2 {
+  border-color: black;
+  fill: green;
+  border-width: 2px;
+}
+
+
