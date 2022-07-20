@@ -134,8 +134,9 @@ ntimes: barumessage.datanya[t].ntimes
 }
 
       fromuser.push(JSON.parse(JSON.stringify(dataToken)));
+console.log("print dari fromuser" + dataToken.milisecondselapse);
+
              }
-console.log("print dari fromuser" + fromuser[0]);
 }
 
 if(barumessage.messagenya === "fromgui"){
