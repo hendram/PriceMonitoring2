@@ -1,7 +1,15 @@
+body {
+  display: flex;
+  flex-direction: column;
+  gap: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+}
+
 .topimagediv {
-   position: absolute;
-   display: inline-block;
-   top: 0px;
+/*   position: absolute; */
+/*   top: 0px; */
    width: 100%;
    height: 25%;
 }
@@ -9,20 +17,20 @@
 .topimageimg {
   width: 100%;
   height: 100%;
+  margin-bottom: -1%;
 }
 
 .bannerdiv {
-   position: absolute;
+ /*  position: absolute; */
    display: flex;
    flex-direction: row;
    flex-wrap: wrap; 
    align-items: center;
    gap: 7%;
-   top: 25%;
+/*   top: 25%; */
    width: 100%;
-   height: 6%;
+   height: fit-content;
    background-color: #e8132c;
-    
 }
 
 .monitoringdiv {

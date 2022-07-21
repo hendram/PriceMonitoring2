@@ -1,6 +1,6 @@
 .divtokeninpagebottom {
-position: absolute;
-top: 31%;
+ /* position: absolute; */
+/* top: 31%; */
 width: 100%;
 height: 100%;
 display: flex;
@@ -8,8 +8,8 @@ flex-direction: column;
 }
 
 .divtokeninpagetop {
-position: absolute;
-top: 31%;
+/* position: absolute; */
+/* top: 31%; */
 width: 100%;
 height: 100%;
 display: flex;
