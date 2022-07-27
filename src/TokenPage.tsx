@@ -121,7 +121,7 @@ return(
 <span className="spaning">Pricein:</span>
 </div>
 <div className="priceininput">
-<input type="text" size={20} ref={pricein} />
+<input type="text" ref={pricein} maxLength={50} className="priceininputtext"/>
 </div>
 <div className="intervalspan">
 <span className="spaning">Interval:</span>
@@ -292,19 +292,22 @@ return(
 <span className="spaning">Tokenname1:</span>
 </div>
 <div className="tokenname1input">
-<input type="text" size={20} ref={tokenname1} />
+<input type="text" ref={tokenname1} maxLength={20} 
+className="tokenname1inputtext"/>
 </div>
 <div className="tokenaddress1span">
 <span className="spaning">Tokenaddress1:</span>
 </div>
 <div className="tokenaddress1input">
-<input type="text" size={40} ref={tokenaddress1} />
+<input type="text" ref={tokenaddress1} maxLength={50}
+className="tokenaddress1inputtext" />
 </div>
 <div className="digittoken1span">
 <span className="spaning">Digittoken1:</span>
 </div>
 <div className="digittoken1input">
-<input type="text" size={3} ref={digittoken1} />
+<input type="text" ref={digittoken1} maxLength={5}
+className="digittoken1inputtext"/>
 </div>
 </div>
 <div className="divrow4">
@@ -312,19 +315,22 @@ return(
 <span className="spaning">Tokenname2:</span>
 </div>
 <div className="tokenname2input">
-<input type="text" size={20} ref={tokenname2} />
+<input type="text" ref={tokenname2} maxLength={20}
+className="tokenname2inputtext"/>
 </div>
 <div className="tokenaddress2span">
 <span className="spaning">Tokenaddress2:</span>
 </div>
 <div className="tokenaddress2input">
-<input type="text" size={40} ref={tokenaddress2} />
+<input type="text" ref={tokenaddress2} maxLength={50}
+className="tokenaddress2inputtext"/>
 </div>
 <div className="digittoken2span">
 <span className="spaning">Digittoken2:</span>
 </div>
 <div className="digittoken2input">
-<input type="text" size={3} ref={digittoken2} />
+<input type="text" ref={digittoken2} maxLength={5}
+className="digittoken2inputtext"/>
 </div>
 </div>
 <div className="divrow5">

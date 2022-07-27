@@ -1,4 +1,4 @@
-import React, {useState, useEffect, ReactElement} from 'react';
+import React, {useState, useRef, useEffect, ReactElement} from 'react';
 import LineChart from './LineChart'
 import Closingbutton from './Closingbutton'
 import './LineGPage.css';
@@ -34,10 +34,23 @@ currentts: number;
 ntimes: number;
 }
 
+type widheset = {
+width: number; 
+height: number; 
+widthlast: number;
+heightlast: number;
+}
+
 
 type props = {
   datalinegpage:  [];
   emptydata: Function;
+}
+
+type SVGchange = {
+svghidorsh: string;
+divwaithidorsh: string;
+afteronelock: string;
 }
 
 
@@ -45,64 +58,93 @@ const LineGPage: React.FC<props> = ({datalinegpage, emptydata,}: props):
 ReactElement => {
 
 const url="wss://localhost:8443";
+// using useRef for Websocket singleton will makes more controllabel and
+// predictable when new instance need it
+const websock = useRef<WebSocket>(Singletonws.getInstance());
 
-const [websock, setWebsock] = useState<WebSocket>
-(Singletonws.getInstance());
 
-const [allpricetime, setAllpricetime] = useState<Array<AllPricein>>([]);
-const tlinechart: number[] = [];
-const [tnum, setTnum] = useState<number>(NaN);
-const lchartdata: JSX.Element[] = []
+const allpricetime = useRef<Array<AllPricein>>([]);
+const tnum = useRef<number>(NaN);
+
 const listdatain: Array<Listdatain> = [];
+const widhehold = useRef<Array<widheset>>([]);
+const [lchartdata, setLchartdata] = useState<JSX.Element[]>([]);
+const divlchart = useRef<Array<SVGchange>>([]);
 
-
-      websock.onopen = () => {
+      websock.current.onopen = () => {
  const message = { messagenya: "fromgui" }
-        websock.send(JSON.stringify(message));
+        websock.current.send(JSON.stringify(message));
 }             
 
 window.addEventListener('unload', function(event){
         let message = {deleteall: "windowclose"};
-          websock.send(JSON.stringify(message));
+          websock.current.send(JSON.stringify(message));
    });
 
 // set and delete table number using useEffect after user click delete chart
 
 const changetnum = (tnumn: number) => {
-      let tnumnew = tnum;
-        tnumnew = tnumn;
-       setTnum(tnumnew);
-     console.log("nilai tnum" + tnum);
+     tnum.current = tnumn;
+     tlinecex(tnum.current);
+   console.log("nilai tnum" + tnum.current);
   }
 
 // tlinecex for deleted graph
-const tlinecex = (tnum: number) => {
-                let indexdel = tlinechart.indexOf(tnum);
-                let deleteitem = [...allpricetime];
-                 deleteitem.splice(indexdel, 1);
-                   setAllpricetime(deleteitem);
-                 let message = {deleteone: indexdel};
-  websock.send(JSON.stringify(message));         
-                  let tnumnew = tnum;
-                   tnumnew = NaN;
-                 setTnum(tnumnew);
+const tlinecex = (tnumin: number) => {
+                 allpricetime.current.splice(tnumin, 1);
+
+    divlchart.current.splice(tnumin, 1);     
+ widhehold.current.splice(tnumin, 1);
+                    tnum.current = NaN;
+
+ // JSON.stringify cannot automatically makes value of object become string
+// while only string accepted for websock send
+
+    let message = {deleteone: tnumin.toString()};
+
+
+  websock.current.send(JSON.stringify(message));
+                     rerenderlchart();              
+                    
+
 }
 
- useEffect(() => {
-if(!isNaN(tnum)){
-tlinecex(tnum);
+
+
+const afterlengthone = (idnya: number) => {
+    if(divlchart.current[idnya].afteronelock === "no"){
+      
+      divlchart.current[idnya].svghidorsh = "svgsh";
+      divlchart.current[idnya].divwaithidorsh = "divwaithid";
+      divlchart.current[idnya].afteronelock = "yes";
+     rerenderlchart();
+
 }
-}, [tnum]);
+}
+
+const handlemouseenterfunc = (idnya: number) => {
+
+      divlchart.current[idnya].svghidorsh = "svgshwithblock";
+      rerenderlchart();
+}
+
+
+const handlemouseleavefunc = (idnya: number) => {
+       divlchart.current[idnya].svghidorsh = "svgsh";
+      rerenderlchart();
+}
 
 useEffect(() => {
-if(datalinegpage.length !== 0 && websock.readyState === WebSocket.OPEN){
+if(datalinegpage.length !== 0 && 
+websock.current.readyState === WebSocket.OPEN){
+       listdatain.length = 0;
       let goodform = JSON.parse(JSON.stringify(datalinegpage));
 // Check if allpricetime array has tokenname2 data already or not
    for(let w=0; w < datalinegpage.length; w++){
        let newdata = "yes";
-         for(let k=0; k < allpricetime.length; k++){
-          if((allpricetime[k].tokenname === goodform[w].tokenname2)
-          && (allpricetime[k].tokenanchor === goodform[w].tokenname1)){
+         for(let k=0; k < allpricetime.current.length; k++){
+          if((allpricetime.current[k].tokenname === goodform[w].tokenname2)
+          && (allpricetime.current[k].tokenanchor === goodform[w].tokenname1)){
              newdata = "no";
 
 }}
@@ -116,7 +158,7 @@ if(datalinegpage.length !== 0 && websock.readyState === WebSocket.OPEN){
 
      console.log("message datanya " + JSON.stringify(message.datanya[0]));
       
-          websock.send(JSON.stringify(message));
+          websock.current.send(JSON.stringify(message));
 
 
       for(let u=0;  u < listdatain.length; u++){
@@ -125,9 +167,18 @@ if(datalinegpage.length !== 0 && websock.readyState === WebSocket.OPEN){
 pricetime:[], tokenname: listdatain[u].tokenname2, 
 tokenanchor: listdatain[u].tokenname1,
 pricein: listdatain[u].pricein}
-       setAllpricetime(allpricetime => [...allpricetime, newpricetime]);
+       allpricetime.current.push(newpricetime);
+  
+     widhehold.current.push({width: NaN, 
+height: NaN, widthlast: NaN, heightlast: NaN});
+
+    divlchart.current.push({svghidorsh: "svghid",
+divwaithidorsh: "divwaitsh", afteronelock: "no"}); 
+
 }
          
+rerenderlchart();
+
 if(datalinegpage.length !== 0){
 emptydata();
 }
@@ -136,44 +187,36 @@ emptydata();
 },[datalinegpage]);
 
 
-console.log("panjang lchartdata "+ lchartdata[0]);
 
-          websock.onmessage = (e) => {
+
+console.log("panjang lchartdata "+ lchartdata.length);
+
+          websock.current.onmessage = (e) => {
              console.log(JSON.parse(e.data));
          if(JSON.parse(e.data).price && JSON.parse(e.data).time){
   let splitresult = JSON.parse(e.data).price.split(' ');
              console.log(splitresult[4]);
-      for(let v=0; v < allpricetime.length; v++){
+      for(let v=0; v < allpricetime.current.length; v++){
 // fill in allpricetime pricetime array data         
-    if((splitresult[4] === allpricetime[v].tokenname) &&
-            (splitresult[1] === allpricetime[v].tokenanchor))
+    if((splitresult[4] === allpricetime.current[v].tokenname) &&
+            (splitresult[1] === allpricetime.current[v].tokenanchor))
          {
-                if(allpricetime[v].pricetime.length < 6){
+                if(allpricetime.current[v].pricetime.length < 6){
                         let k = splitresult[0];
                         let l = JSON.parse(e.data).time;
                       let z = {x: k, y: l};
-                   let a = [...allpricetime];
-                   let b = allpricetime[v];
-                   let c = [...allpricetime[v].pricetime];
-                    c.push(z);
-                    b.pricetime = c;
-                    a[v] = b;
-           setAllpricetime(a);
+                   allpricetime.current[v].pricetime.push(z);
+                       rerenderlchart();
             break;
         }
              else {
                    let k = splitresult[0];
                         let l = JSON.parse(e.data).time;
                       let z = {x: k, y: l};
-                   let a = [...allpricetime];
-                   let b = allpricetime[v];
-                   let c = [...allpricetime[v].pricetime];
-                    c.splice(0,1);
-                    c.push(z);
-                    b.pricetime = c;
-                    a[v] = b;
-           setAllpricetime(a);
-           break;
+                   allpricetime.current[v].pricetime.splice(0, 1);
+                  allpricetime.current[v].pricetime.push(z);
+                   rerenderlchart();
+          break;
 }}        
 
 }
@@ -181,17 +224,64 @@ console.log("panjang lchartdata "+ lchartdata[0]);
 }
 }
 
-if(allpricetime.length !== 0){
-for(let m =0; m < allpricetime.length; m++){
-  tlinechart.push(m);
-  lchartdata.push( <div key={m} className="lchartgr">
+// using useRef in this function, cause useState cannot rerender at all
+const widhesetlp = (idnya: number, widthnya: number, heightnya: number) => {
+   console.log('width from lchart' + idnya + ' ' + widthnya +' ' + heightnya);
+        
+    if(isNaN(widhehold.current[idnya].width) && 
+ isNaN(widhehold.current[idnya].height)){
+      widhehold.current.splice(idnya, 1, {width: widthnya, 
+height: heightnya, widthlast: NaN, heightlast: NaN});
+  
+      rerenderlchart();
+
+       console.log('inside if');
+  }
+  else {
+
+    widhehold.current.splice(idnya, 1, { width: widhehold.current[idnya].width, 
+ height: widhehold.current[idnya].height, 
+     widthlast: widthnya -  widhehold.current[idnya].width, 
+heightlast: heightnya - widhehold.current[idnya].height});
+
+    rerenderlchart();
+}
+
+console.log('isi widhehold' + widhehold.current[0].width + 'plus' + 
+widhehold.current[0].widthlast);     
+}
+
+
+
+const rerenderlchart = () => {
+
+let newlchartdata = [...lchartdata];
+
+if(newlchartdata.length !== 0) {
+     newlchartdata.length = 0;
+}
+
+for(let m =0; m < allpricetime.current.length; m++){
+  newlchartdata.push( <div key={m} className="lchartgr">
         <Closingbutton id={m} delme={changetnum} /> 
-        <LineChart  data={allpricetime[m].pricetime}
-namatoken={allpricetime[m].tokenname} tokenacuan={allpricetime[m].tokenanchor}
-priceawal={allpricetime[m].pricein} />
+        <LineChart  id={m} data={allpricetime.current[m].pricetime}
+namatoken={allpricetime.current[m].tokenname} 
+tokenacuan={allpricetime.current[m].tokenanchor}
+priceawal={allpricetime.current[m].pricein} widhesetlc={widhesetlp} 
+widhenow={widhehold.current[m]} divwait={divlchart.current[m].divwaithidorsh} 
+svghs={divlchart.current[m].svghidorsh}
+handlemouseenter={handlemouseenterfunc} 
+handlemouseleave={handlemouseleavefunc} 
+afterlength={afterlengthone} />
       </div>);
 }
-}
+
+setLchartdata(newlchartdata);
+
+ }
+
+
+
 
 
     return (

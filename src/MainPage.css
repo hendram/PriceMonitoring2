@@ -17,7 +17,7 @@ body {
 .topimageimg {
   width: 100%;
   height: 100%;
-  margin-bottom: -1%;
+  margin-bottom: -0.85%;
 }
 
 .bannerdiv {
@@ -30,6 +30,8 @@ body {
 /*   top: 25%; */
    width: 100%;
    height: fit-content;
+   padding-top: 1%;
+   padding-bottom: 0.5%;
    background-color: #e8132c;
 }
 
@@ -47,7 +49,7 @@ body {
 
 
 .addgraphdiv {
-   display: inline;
+   display: block;
    height: fit-content;
 }
 
@@ -62,7 +64,7 @@ body {
 }
 
 .graphicsviewsh {
-   display: inline; /* default for inline is width:100% height: fit-content */
+   display: block; /* default for inline is width:100% height: fit-content */
 }
 
 .monitorviewhid {
@@ -70,7 +72,7 @@ body {
 }
 
 .monitorviewsh {
-   display: inline;
+   display: block;
 }
 
 .buttonconnectdiv {
@@ -94,6 +96,6 @@ body {
 }
 
 .walletconnsh {
-  display: inline;
+  display: block;
 }
 

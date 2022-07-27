@@ -18,7 +18,8 @@
 .divrow1 {
    display: flex;
    flex-direction: row;
-   flex-basis: 100%;
+   flex-wrap: wrap;
+   width: 100%;
    height: fit-content;
    padding-bottom: 2%;
 }
@@ -26,31 +27,28 @@
 .divrow2 {
    display: flex;
    flex-direction: row;
-   flex-basis: 100%;
-   height: fit-content;
-   padding-bottom: 2%;
-}
-
-
-.divrow3 {
-   display: flex;
-   flex-direction: row;
+   flex-wrap: wrap; 
    width: 100%;
    height: fit-content;
    padding-bottom: 2%;
 }
 
-.divrow4 {
+
+.divrow3, .divrow4 {
    display: flex;
    flex-direction: row;
+   flex-wrap: wrap;
    width: 100%;
+   gap: 1%;
    height: fit-content;
    padding-bottom: 2%;
 }
 
 .divrow5 {
    display: flex;
-   flex-direction: row; 
+   flex-direction: row;
+    flex-wrap: wrap;
+    gap: 3%; 
     width: 100%;
    height: fit-content;
    padding-bottom: 2%;
@@ -59,19 +57,19 @@
 .chainspan {
   width:fit-content;
   height: fit-content;
-  padding-right: 1%;
+  margin-right: 1%;
 }
 
 .chainselect {
   width:fit-content;
   height: fit-content;
-  padding-right: 20%;
+  margin-right: 20%;
 }
 
 .dexspan {
   width:fit-content;
   height: fit-content;
-  padding-right: 1%;
+  margin-right: 1%;
 }
 
 .dexselect {
@@ -82,132 +80,111 @@
 .priceinspan {
   width:fit-content;
   height: fit-content;
-  padding-right: 1%;
+  margin-right: 1%;
 }
 
 .priceininput {
  width:fit-content;
   height: fit-content;
-  padding-right: 2%;
+  margin-right: 2%;
+}
+
+.priceininputtext {
+  width: 20vw;
 }
 
 .intervalspan {
   width:fit-content;
   height: fit-content;
-  padding-right: 2%;
+  margin-right: 2%;
 }
 
 .hoursselect {
   width:fit-content;
   height: fit-content;
-  padding-right: 1%;
+  margin-right: 1%;
 }
 
 
 .hoursspan {
   width:fit-content;
   height: fit-content;
-  padding-right: 2%;
+  margin-right: 2%;
 }
 
 
 .minutesselect {
   width:fit-content;
   height: fit-content;
-  padding-right: 1%;
+  margin-right: 1%;
 }
 
 
 .minutesspan {
   width:fit-content;
   height: fit-content;
-  padding-right: 2%;
+  margin-right: 2%;
 }
 
 
 .secondsselect {
   width:fit-content;
   height: fit-content;
-  padding-right: 1%;
+  margin-right: 1%;
 }
 
 
 .secondsspan {
   width:fit-content;
   height: fit-content;
-  padding-right: 2%;
+  margin-right: 2%;
 }
 
 
-.tokenname1span {
- width:fit-content;
-  height: fit-content;
-  padding-right: 1%;
-}
-
-.tokenname1input {
- width:fit-content;
-  height: fit-content;
-  padding-right: 2%;
-}
-
-.tokenaddress1span {
- width:fit-content;
-  height: fit-content;
-  padding-right: 1%;
-}
-
-.tokenaddress1input {
- width:fit-content;
-  height: fit-content;
-padding-right: 2%;
-}
-
-.digittoken1span {
- width:fit-content;
-  height: fit-content;
-  padding-right: 1%;
-}
-
-.digittoken1input {
+.tokenname1span, .tokenname2span {
  width:fit-content;
   height: fit-content;
 }
 
-.tokenname2span {
+.tokenname1input, .tokenname2input {
  width:fit-content;
   height: fit-content;
-  padding-right: 1%;
+  margin-right: 5%;
 }
 
-.tokenname2input {
- width:fit-content;
-  height: fit-content;
-  padding-right: 2%;
+.tokenname1inputtext, .tokenname2inputtext {
+ width: 15vw;
 }
 
-.tokenaddress2span {
+.tokenaddress1span, .tokenaddress2span {
  width:fit-content;
   height: fit-content;
-  padding-right: 1%;
 }
 
-.tokenaddress2input {
+.tokenaddress1input, .tokenaddress2input {
  width:fit-content;
   height: fit-content;
-padding-right: 2%;
+margin-right: 5%;
 }
 
-.digittoken2span {
- width:fit-content;
-  height: fit-content;
-  padding-right: 1%;
+.tokenaddress1inputtext, .tokenaddress2inputtext {
+ width: 30vw;
 }
 
-.digittoken2input {
+.digittoken1span, .digittoken2span {
  width:fit-content;
   height: fit-content;
 }
+
+.digittoken1input, .digittoken2input {
+ width:fit-content;
+  height: fit-content;
+}
+
+.digittoken1inputtext, .digittoken2inputtext {
+  width: 5vw;
+}
+
 
 .buttoncanceldiv {
  width:fit-content;
