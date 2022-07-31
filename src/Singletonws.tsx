@@ -6,7 +6,7 @@ class Singletonws {
     }
     static getInstance(): WebSocket {
         if (!Singletonws.instance) {
-            Singletonws.instance = new WebSocket("wss://localhost:8443");
+            Singletonws.instance = new WebSocket("wss://localhost");
         }
         return Singletonws.instance;
     }

@@ -1,15 +1,19 @@
 import React, {useRef, useState, ReactElement} from 'react';
 import './TokenPage.css';
 
+
 type props = {
 id: number;
 numberlist: Function;
 eachtoken: Function;
+counterset: number;
 }
 
 
-const TokenPage: React.FC<props> = ({id, numberlist, eachtoken,}: props):
-ReactElement => {
+const TokenPage: React.FC<props> = ({id, numberlist, eachtoken, 
+counterset}: props): ReactElement => {
+
+const [rerendertp, setRerendertp] = useState(counterset);
 
 const chain = useRef<HTMLSelectElement>(null);
 const dex = useRef<HTMLSelectElement>(null);
@@ -26,6 +30,12 @@ const digittoken1 = useRef<HTMLInputElement>(null);
 const tokenname2 = useRef<HTMLInputElement>(null);
 const tokenaddress2 = useRef<HTMLInputElement>(null);
 const digittoken2 = useRef<HTMLInputElement>(null);
+
+if(counterset !== 0){
+    let newrerendertp = rerendertp;
+       newrerendertp = counterset;
+      setRerendertp(newrerendertp);
+}
 
 
 const handleCancel = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -71,6 +81,7 @@ milisecondshours + milisecondsminutes + milisecondsseconds;
 const currenttimestamp = Date.now();
 
      let dataToken = {
+id: id,
 chain: chain.current.value, 
 dex: dex.current.value,
 pricein: pricein.current.value, 
@@ -85,11 +96,8 @@ currentts: currenttimestamp,
 ntimes: 1
 }
 
-
 console.log("dataToken" + dataToken);
 eachtoken(dataToken);
-numberlist(id);
-
 }
 }
 

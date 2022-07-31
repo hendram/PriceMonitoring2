@@ -9,6 +9,7 @@ type props = {
 }
 
 type Listdatain = {
+id: number;
 chain: string;
 dex: string;
 pricein: string;
@@ -23,7 +24,9 @@ currentts: number;
 ntimes: number;
 }
 
-
+type Countertype = {
+counter: number;
+}
 
 const TokeninPage: React.FC<props> = ({provdatprop, addprop,}: props): 
 ReactElement => {
@@ -31,43 +34,61 @@ ReactElement => {
 const [arrTokenpage, setArrTokenpage] = useState<JSX.Element[]>([]);   
 const [arrdatatoken, setArrdatatoken] = useState<Array<Listdatain>>([]);
 const [ticketings, setTicketings] = useState<number[]>([]);
-const [number, setNumber] = useState<number>(NaN);
-
+// numid specifically use when user click cancel button to remove Tokenpage
+const [numid, setNumid] = useState<number>(NaN);
+const counternya = useRef<Array<Countertype>>([]);
 
 const eachtokendata = (input: Listdatain) => {
+    if((isNaN(Number(input.pricein))) ||
+ (/\s/g.test(input.pricein))) {
+    if(counternya.current[input.id].counter === 1000000) {
+    counternya.current[input.id].counter = 1;
+}
+ else {
+       counternya.current[input.id].counter = 
+counternya.current[input.id].counter + 1;
+       }      
+}
+else {
    setArrdatatoken(arrdatatoken => [...arrdatatoken, input]);
+     numidnya(input.id);
+}
 }
 
 let divtokeninpage = "";
+let setzero: number = 0;
 
 console.log("arrdatatoken" + arrdatatoken.length);
 
 const [tokeninputaskvis, setTokeninputaskvis] = useState("tokeninputasksh");
 
-
-const numlist = (num: number) => {
-
-let numnya = number;
-    numnya = num;
-setNumber(numnya);
+const numidnya = (numidnow: number) => {
+      let newnumid = numid;
+         newnumid = numidnow;
+        setNumid(newnumid);
 }
 
-function stupidreact() {
-  
-    let indexnya = ticketings.indexOf(number); 
+// Why this react is so stupid ? Because you can't using indexOf directly from 
+// callback function or function which called from inside callback function.
 
+function stupidreact(idnum: number) {
+  
+    let indexnya = ticketings.indexOf(idnum); 
+   
+    counternya.current.splice(indexnya, 1);
+ 
   setTicketings((ticketings) => 
-ticketings.filter((i) => i !== number));
+ticketings.filter((i) => i !== indexnya));
     
        setArrTokenpage((arrTokenpage) => arrTokenpage.filter((i) => 
 arrTokenpage.indexOf(i) !== indexnya)); 
        
-        let newnumber = number;
-          newnumber = NaN;
-         setNumber(newnumber);
+             let newnumid = numid;
+                newnumid = NaN;
+             setNumid(newnumid);
 }
 
-console.log('nomor numbernya' + number);
+useEffect(() => { stupidreact(numid); }, [numid]);
 
 if(arrTokenpage.length === 0 && arrdatatoken.length !== 0){
    provdatprop(arrdatatoken);
@@ -76,21 +97,34 @@ if(arrTokenpage.length === 0 && arrdatatoken.length !== 0){
     setArrdatatoken(arrdatatokennew);
 }
 
-useEffect(() => { stupidreact() }, [number]);
 
-const handleClick = (valuenumber: number) => {
+const handleClick = (valuenumber: string) => {
+ if((isNaN(Number(valuenumber)))
+    || (valuenumber === "0") || (valuenumber === "") 
+|| (/\s/g.test(valuenumber))){
+    if(setzero === 1000000){
+     setzero = 1;
+}
+else {
+      setzero = setzero + 1;
+}
+}
 
-       for(let x = 0; x < valuenumber; x++){
+else {
+      for(let x = 0; x < (+valuenumber); x++){
+     counternya.current.push({counter: 0});
+
         setTicketings(ticketings => [...ticketings, x]);
         setArrTokenpage(arrTokenpage => 
 [...arrTokenpage,<div key={x} ><TokenPage id={x} eachtoken={eachtokendata} 
-numberlist={numlist} /><br></br> </div>]);
+ numberlist={numidnya} counterset={counternya.current[x].counter} />
+<br></br> </div>]);
          }
 
        let newtokeninputaskvis = tokeninputaskvis;
              newtokeninputaskvis = "tokeninputaskhid";
         setTokeninputaskvis(newtokeninputaskvis);
-
+}
 }
 
 useEffect(() => {
@@ -111,7 +145,7 @@ return(
 <div className={divtokeninpage}>
   <div className={tokeninputaskvis}>
  <Tokeninputask 
-handleClicking={handleClick}  passtokinput={addprop} />
+handleClicking={handleClick}  passtokinput={addprop} zeroset={setzero} />
   </div>
    <div>
    {arrTokenpage}

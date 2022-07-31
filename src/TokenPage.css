@@ -209,6 +209,7 @@ padding-right: 2%;
   font-weight: 250;
   border-radius: 10px;
   color: red;
+  outline: none;
 }
 
 .buttonsubmit {
@@ -217,5 +218,6 @@ padding-right: 2%;
   font-weight: 250;
   border-radius: 10px;
   color: red;
+  outline: none;
 }
 

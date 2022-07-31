@@ -20,6 +20,7 @@ pricein: string;
 
 
  type Listdatain = {
+id: number;
 chain: string;
 dex: string;
 pricein: string;
@@ -57,7 +58,7 @@ afteronelock: string;
 const LineGPage: React.FC<props> = ({datalinegpage, emptydata,}: props):
 ReactElement => {
 
-const url="wss://localhost:8443";
+const url="wss://localhost";
 // using useRef for Websocket singleton will makes more controllabel and
 // predictable when new instance need it
 const websock = useRef<WebSocket>(Singletonws.getInstance());
