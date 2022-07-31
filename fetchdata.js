@@ -3,6 +3,7 @@ const https = require("https");
 const http = require("http");
 const express = require('express');
 const app = express();
+const happ = express();
 const fs = require("fs");
 const FetchToken1Token2 = require('./FetchToken1Token2');
 const wss = require("ws");
@@ -13,8 +14,15 @@ const single = singleton.getInstance();
  
 const fromuser = [];
 let insidefor = "false";
+let id = 0;
+let lookup = [];
 
 app.use('/', express.static('../pricemongui/build'));
+happ.get('*', function(req, res) {
+     res.redirect('https://localhost');
+});
+
+
 
 function runningnow(){
              let datenow = Date.now();
@@ -57,27 +65,23 @@ fromuser[u].digit2, fromuser[u].pricein, single);
 }
 
 
-function arggraph(arg, wssx, wss){
+function arggraph(arg, wssx, ws){
 for(let v=0; v < arg.length; v=v+2){
 let graphsend = {"price": arg[v], 
 "time": arg[v+1]};
 
-wssx.clients.forEach(function(client) {
-      if (client.readyState === wss.OPEN) {
-        console.log('dikirimkan' + graphsend);
-        client.send(JSON.stringify(graphsend));
-}});
+ws.send(JSON.stringify(graphsend));
+
 };
 }
 
-function argwa(arg, wssx, wss) {
+function argwa(arg, wssx, ws) {
 for(let z=0; z <  arg.length; z++){
 
 let queuem = {"messagenya": arg[z]};
-wssx.clients.forEach(function(client) {
-      if (client.readyState === wss.OPEN) {
-        client.send(JSON.stringify(queuem));
-}});
+
+ws.send(JSON.stringify(queuem));
+
 }
 }
 
@@ -93,25 +97,31 @@ const options = {
 };
 
 var server = https.createServer(options, app);
-server.listen(8443, '', function(req, res) {
+server.listen(443, '', function(req, res) {
               console.log("server started at port 8443");
 }); 
+
+
+const httpServer = http.createServer(happ);
+httpServer.listen(80); 
 
 let wssx = new WebSocketServer({ server: server });
 
 wssx.on("connection", function connection(ws){
-
+ 
 console.log("connect ws");
 
  ws.on("message", function incoming(message) {
       let newmessage = message.toString();
        let barumessage = JSON.parse(newmessage);
 
+
 if(barumessage.deleteall){
     fromuser.length = 0;
 }
 
 if(barumessage.deleteone){
+    console.log('masuk neh barumessage deleteone' + barumessage.deleteone);
     fromuser.splice(barumessage.deleteone, 1);
 }
 
@@ -147,12 +157,12 @@ setInterval(runningnow, 5000);
 
 const graphaccept = (arg) => {
 if(arg === FetchToken1Token2.graphpolygonquick){
-   arggraph(arg, wssx, wss);
+   arggraph(arg, wssx, ws);
    console.log('panjang arg' + arg.length);
    arg.length = 0;
 }
 else if(arg === FetchToken1Token2.graphbscpancake){
- arggraph(arg, wssx, wss);
+ arggraph(arg, wssx, ws);
    arg.length = 0;
 }
 }
@@ -169,11 +179,8 @@ single.on('sendgraph', graphaccept);
 const keeps = () => {
 let keep = {"message": "alivenow"};
 
-wssx.clients.forEach(function(client) {
-      if (client.readyState === wss.OPEN) {
-        client.send(JSON.stringify(keep));
-}});
-console.log(JSON.stringify(keep));
+        ws.send(JSON.stringify(keep));
+console.log(JSON.stringify(keep)); 
 };
 
 
@@ -191,11 +198,11 @@ if(barumessage.messagenya === "fromext"){
 
 single.on('sendwa', function(arg){
 if(arg === FetchToken1Token2.wapolygonquick){
-argwa(arg, wssx, wss);
+argwa(arg, wssx, ws);
 arg.length = 0;
 }
 else if(arg === FetchToken1Token2.wabscpancake){
-argwa(arg, wssx, wss);
+argwa(arg, wssx, ws);
 arg.length = 0;
 }
    
