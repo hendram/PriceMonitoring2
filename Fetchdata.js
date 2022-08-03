@@ -1,28 +1,14 @@
- 
-const https = require("https");
-const http = require("http");
-const express = require('express');
-const app = express();
-const happ = express();
-const fs = require("fs");
 const FetchToken1Token2 = require('./FetchToken1Token2');
-const wss = require("ws");
-const WebSocketServer = wss.Server;
 const singleton = require('./Singleton');
 const single = singleton.getInstance();
-
- 
 const fromuser = [];
+class Fetchdata {
+
+constructor(websock){
+
 let insidefor = "false";
-let id = 0;
-let lookup = [];
-
-app.use('/', express.static('../pricemongui/build'));
-happ.get('*', function(req, res) {
-     res.redirect('https://localhost');
-});
-
-
+let setkeep = NaN;
+let setrun = NaN;
 
 function runningnow(){
              let datenow = Date.now();
@@ -53,7 +39,7 @@ for(let k=0; k < fromuser.length; k++){
 + fromuser[u].currentts) <= datenow){
                  fromuser[u].ntimes = fromuser[u].ntimes + 1;
 
-              innow = new FetchToken1Token2(fromuser[u].chain,
+           let innow = new FetchToken1Token2(fromuser[u].chain,
 fromuser[u].dex, fromuser[u].tokenname1, fromuser[u].tokenname2, 
 fromuser[u].tokenaddress1, fromuser[u].tokenaddress2, fromuser[u].digit1, 
 fromuser[u].digit2, fromuser[u].pricein, single);
@@ -91,21 +77,7 @@ single.emit('keepaliveevent', '');
    
 }
 
-const options = {
-    key: fs.readFileSync("server.key"),
-    cert: fs.readFileSync("server.cert"),
-};
-
-var server = https.createServer(options, app);
-server.listen(443, '', function(req, res) {
-              console.log("server started at port 8443");
-}); 
-
-
-const httpServer = http.createServer(happ);
-httpServer.listen(80); 
-
-let wssx = new WebSocketServer({ server: server });
+let wssx = websock;
 
 wssx.on("connection", function connection(ws){
  
@@ -118,6 +90,8 @@ console.log("connect ws");
 
 if(barumessage.deleteall){
     fromuser.length = 0;
+    clearInterval(setkeep);
+    clearInterval(setrun);
 }
 
 if(barumessage.deleteone){
@@ -152,8 +126,8 @@ console.log("print dari fromuser" + dataToken.milisecondselapse);
 if(barumessage.messagenya === "fromgui"){
 
 
-setInterval(keepalivefunc, 5000);
-setInterval(runningnow, 5000);
+setkeep = setInterval(keepalivefunc, 5000);
+setrun = setInterval(runningnow, 5000);
 
 const graphaccept = (arg) => {
 if(arg === FetchToken1Token2.graphpolygonquick){
@@ -212,4 +186,8 @@ arg.length = 0;
 });
 
 })
+}
+}
+
+module.exports = Fetchdata;
 
