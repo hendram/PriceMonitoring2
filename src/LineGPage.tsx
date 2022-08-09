@@ -44,9 +44,8 @@ heightlast: number;
 
 
 type props = {
-  datalinegpage:  [];
-  emptydata: Function;
-}
+  datalinegpage: Listdatain | null;
+ }
 
 type SVGchange = {
 svghidorsh: string;
@@ -55,7 +54,7 @@ afteronelock: string;
 }
 
 
-const LineGPage: React.FC<props> = ({datalinegpage, emptydata,}: props):
+const LineGPage: React.FC<props> = ({datalinegpage}: props):
 ReactElement => {
 
 const url="wss://localhost";
@@ -67,7 +66,8 @@ const websock = useRef<WebSocket>(Singletonws.getInstance());
 const allpricetime = useRef<Array<AllPricein>>([]);
 const tnum = useRef<number>(NaN);
 
-const listdatain: Array<Listdatain> = [];
+// Using type assertion for empty object {} as type or <type>{}
+let listdatain: Listdatain | null  = null;
 const widhehold = useRef<Array<widheset>>([]);
 const [lchartdata, setLchartdata] = useState<JSX.Element[]>([]);
 const divlchart = useRef<Array<SVGchange>>([]);
@@ -92,6 +92,8 @@ const changetnum = (tnumn: number) => {
 
 // tlinecex for deleted graph
 const tlinecex = (tnumin: number) => {
+    let message = {deleteone: allpricetime.current[tnumin]};
+
                  allpricetime.current.splice(tnumin, 1);
 
     divlchart.current.splice(tnumin, 1);     
@@ -100,8 +102,6 @@ const tlinecex = (tnumin: number) => {
 
  // JSON.stringify cannot automatically makes value of object become string
 // while only string accepted for websock send
-
-    let message = {deleteone: tnumin.toString()};
 
 
   websock.current.send(JSON.stringify(message));
@@ -136,38 +136,38 @@ const handlemouseleavefunc = (idnya: number) => {
 }
 
 useEffect(() => {
-if(datalinegpage.length !== 0 && 
+if(datalinegpage && 
 websock.current.readyState === WebSocket.OPEN){
-       listdatain.length = 0;
+     console.log('masuk useeffect datalinegpage linegpage');
       let goodform = JSON.parse(JSON.stringify(datalinegpage));
 // Check if allpricetime array has tokenname2 data already or not
-   for(let w=0; w < datalinegpage.length; w++){
        let newdata = "yes";
          for(let k=0; k < allpricetime.current.length; k++){
-          if((allpricetime.current[k].tokenname === goodform[w].tokenname2)
-          && (allpricetime.current[k].tokenanchor === goodform[w].tokenname1)){
+          if((allpricetime.current[k].tokenname === goodform.tokenname2)
+          && (allpricetime.current[k].tokenanchor === goodform.tokenname1)){
              newdata = "no";
 
-}}
+} 
+} 
       if(newdata === "yes"){
-           listdatain.push(goodform[w]);
-           
+           listdatain = goodform;
+           console.log('masuk newdata yes' + listdatain);
 }
-}         
 
+     if(listdatain){
+     console.log('inside listdatain linegpage');
      const message = { datanya: listdatain };
 
-     console.log("message datanya " + JSON.stringify(message.datanya[0]));
+     console.log("message datanya " + JSON.stringify(message.datanya));
       
           websock.current.send(JSON.stringify(message));
 
 
-      for(let u=0;  u < listdatain.length; u++){
 
-      let newpricetime = {chain: listdatain[u].chain, dex: listdatain[u].dex,
-pricetime:[], tokenname: listdatain[u].tokenname2, 
-tokenanchor: listdatain[u].tokenname1,
-pricein: listdatain[u].pricein}
+      let newpricetime = {chain: listdatain.chain, dex: listdatain.dex,
+pricetime:[], tokenname: listdatain.tokenname2, 
+tokenanchor: listdatain.tokenname1,
+pricein: listdatain.pricein}
        allpricetime.current.push(newpricetime);
   
      widhehold.current.push({width: NaN, 
@@ -175,17 +175,12 @@ height: NaN, widthlast: NaN, heightlast: NaN});
 
     divlchart.current.push({svghidorsh: "svghid",
 divwaithidorsh: "divwaitsh", afteronelock: "no"}); 
-
+}
 }
          
 rerenderlchart();
 
-if(datalinegpage.length !== 0){
-emptydata();
-}
-     
-}
-},[datalinegpage]);
+}, [datalinegpage]);
 
 
 

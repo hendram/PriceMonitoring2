@@ -12,7 +12,7 @@ counterset: number;
 
 const TokenPage: React.FC<props> = ({id, numberlist, eachtoken, 
 counterset}: props): ReactElement => {
-
+//rerendertp use to rerender tokenpage in case user fill in pricein not right and make counterset up
 const [rerendertp, setRerendertp] = useState(counterset);
 
 const chain = useRef<HTMLSelectElement>(null);

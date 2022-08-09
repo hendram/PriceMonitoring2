@@ -4,8 +4,9 @@ import Tokeninputask from './Tokeninputask';
 import './TokeninPage.css';
 
 type props = {
-   provdatprop: Function;
    addprop: string
+   senddatatoken: Function;
+   tokeninpagech: Function;
 }
 
 type Listdatain = {
@@ -28,15 +29,19 @@ type Countertype = {
 counter: number;
 }
 
-const TokeninPage: React.FC<props> = ({provdatprop, addprop,}: props): 
+const TokeninPage: React.FC<props> = ({addprop, senddatatoken, tokeninpagech}: props): 
 ReactElement => {
 
+// useState will only execute from queue when finish from top function which function directly
+// under class declaration
+
 const [arrTokenpage, setArrTokenpage] = useState<JSX.Element[]>([]);   
-const [arrdatatoken, setArrdatatoken] = useState<Array<Listdatain>>([]);
 const [ticketings, setTicketings] = useState<number[]>([]);
 // numid specifically use when user click cancel button to remove Tokenpage
 const [numid, setNumid] = useState<number>(NaN);
 const counternya = useRef<Array<Countertype>>([]);
+// dont use empty object cause empty object will be value as not empty or true
+const passtorun = useRef<string>("no");
 
 const eachtokendata = (input: Listdatain) => {
     if((isNaN(Number(input.pricein))) ||
@@ -50,7 +55,7 @@ counternya.current[input.id].counter + 1;
        }      
 }
 else {
-   setArrdatatoken(arrdatatoken => [...arrdatatoken, input]);
+       senddatatoken(input);
      numidnya(input.id);
 }
 }
@@ -58,7 +63,6 @@ else {
 let divtokeninpage = "";
 let setzero: number = 0;
 
-console.log("arrdatatoken" + arrdatatoken.length);
 
 const [tokeninputaskvis, setTokeninputaskvis] = useState("tokeninputasksh");
 
@@ -66,13 +70,15 @@ const numidnya = (numidnow: number) => {
       let newnumid = numid;
          newnumid = numidnow;
         setNumid(newnumid);
+  console.log('inside numidnya');
 }
 
 // Why this react is so stupid ? Because you can't using indexOf directly from 
 // callback function or function which called from inside callback function.
 
 function stupidreact(idnum: number) {
-  
+    console.log('inside stupidreact tokeninpage' + arrTokenpage.length);
+  if(arrTokenpage.length !== 0){  
     let indexnya = ticketings.indexOf(idnum); 
    
     counternya.current.splice(indexnya, 1);
@@ -86,17 +92,19 @@ arrTokenpage.indexOf(i) !== indexnya));
              let newnumid = numid;
                 newnumid = NaN;
              setNumid(newnumid);
+
+passtorun.current = "yes";
+}
+}
+
+// this if part is only to change location of question to top when press add graph after first add graph
+if(arrTokenpage.length === 0 && passtorun.current === "yes"){
+  console.log('masuk tokeninpagech');
+   tokeninpagech();
+   passtorun.current = "no";
 }
 
 useEffect(() => { stupidreact(numid); }, [numid]);
-
-if(arrTokenpage.length === 0 && arrdatatoken.length !== 0){
-   provdatprop(arrdatatoken);
-   let arrdatatokennew = [...arrdatatoken];
-    arrdatatokennew.length = 0;
-    setArrdatatoken(arrdatatokennew);
-}
-
 
 const handleClick = (valuenumber: string) => {
  if((isNaN(Number(valuenumber)))

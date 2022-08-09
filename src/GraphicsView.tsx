@@ -8,16 +8,35 @@ type props = {
   returnback: Function;
 }   
 
+type Listdatain = {
+id: number;
+chain: string;
+dex: string;
+pricein: string;
+tokenname1: string;
+tokenaddress1: string;
+digittoken1: string;
+tokenname2: string;
+tokenaddress2: string;
+digittoken2: string;
+milisecondselapse: number;
+currentts: number;
+ntimes: number;
+}
+
+// addg props to control when addgraph menu can respon to click again after add new graph
 const GraphicsView: React.FC<props> =({addg, returnback,}: props):
 ReactElement => {
 
 
-const [dataarr, setDataarr] = useState<[]>([]);
+const [datatok, setDatatok] = useState<Listdatain | null>(null);
 
-const providedata = (arg: []) => {
-    let arrreplace = [...dataarr];
-    arrreplace = arg;
-    setDataarr(arg);
+const providedata = (arg: Listdatain | null) => {
+   let newdatatok = datatok;
+       newdatatok = arg;
+    setDatatok(newdatatok);
+
+console.log('inside setdatatok');
 }
 
 const [tokeninpageprop, setTokeninpageprop] = useState<any>({addprop: "no", 
@@ -28,36 +47,17 @@ graphicsviewdiv: "divtokeninpagebottom"});
 const [addprop, setAddprop] = useState<string>("no");
 // pageview will make component wrapped show or hide
 
-console.log("dataarr" + dataarr.length);
 
+const tokeninpageneedhid = () => {
 
-const emptydataarr = () => {
-  if(dataarr.length !== 0){
-     let dataarrnew: [] = [...dataarr];
-     dataarrnew.length = 0;
-     setDataarr(dataarrnew);
-   
-     
-}
-}
-
-const checkdataarr = () => {
-
-if(dataarr.length !== 0){
  let newtokeninpageprop = {addprop: "no", 
 vis: "tokeninpagehid",  beforegraph: "no",  
 graphicsviewdiv: "divtokeninpagebottom" };
        setTokeninpageprop(newtokeninpageprop);
         returnback(addg);
+console.log('masuk tokeninpageneddhid');
 }
-}
 
-    console.log("arg " + dataarr.length);
-
-
-useEffect(() => {
-   checkdataarr();
-}, [JSON.stringify(dataarr)]);
 
 useEffect(() => {
 if(addg === "yes") {
@@ -77,12 +77,11 @@ console.log('isi dari pageview' + tokeninpageprop.vis);
 return(
 <div className={tokeninpageprop.graphicsviewdiv} >
    <div className={tokeninpageprop.vis}>
-  <TokeninPage provdatprop={providedata}
+  <TokeninPage senddatatoken={providedata} tokeninpagech={tokeninpageneedhid}
     addprop={tokeninpageprop.addprop}  />
 </div>
 <div className="linegpagegv">
-  <LineGPage datalinegpage={dataarr}
-emptydata={emptydataarr} />
+  <LineGPage datalinegpage={datatok} />
 </div>
 </div>
 )
