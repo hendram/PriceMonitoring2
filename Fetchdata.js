@@ -1,192 +1,76 @@
-const FetchToken1Token2 = require('./FetchToken1Token2');
 const singleton = require('./Singleton');
 const single = singleton.getInstance();
-const fromuser = [];
+const wss = require("ws");
+const WebSocketServer = wss.Server;
+// Cannot using circular require, for example require websockcomp on fetchdata and vice versa
+const wsc = require ('./WebSockcomp');
+
+// Careful when using extends as every parent class will be instantiated once
 class Fetchdata {
+static selfstorage = [];
+static keepindex = [];
+countgraphsingle = NaN;
 
-constructor(websock){
-
-let insidefor = "false";
-let setkeep = NaN;
-let setrun = NaN;
-
-function runningnow(){
-             let datenow = Date.now();
-
-//Comparing length of polygon with countpolygon 
-for(let k=0; k < fromuser.length; k++){
-// Counting interval time need to run next code
-       if(((fromuser[k].milisecondselapse * fromuser[k].ntimes)
-+ fromuser[k].currentts) <= datenow){
-     console.log('milisecondsel' +fromuser[k].milisecondselapse);
-     console.log('ntimes' +fromuser[k].ntimes);
-    console.log('currentts' + fromuser[k].currentts);
-     console.log('datenow' + datenow);
-
-   if(fromuser[k].chain === "Polygon"){
-    FetchToken1Token2.countpolygon = FetchToken1Token2.countpolygon + 1;
-}     
-    else if(fromuser[k].chain === "Bsc"){
-    FetchToken1Token2.countbsc = FetchToken1Token2.countbsc + 1;
-}
-}
+constructor(){
 }
 
 
-           for(let u = 0; u < fromuser.length; u++){
-
-          if(((fromuser[u].milisecondselapse * fromuser[u].ntimes)
-+ fromuser[u].currentts) <= datenow){
-                 fromuser[u].ntimes = fromuser[u].ntimes + 1;
-
-           let innow = new FetchToken1Token2(fromuser[u].chain,
-fromuser[u].dex, fromuser[u].tokenname1, fromuser[u].tokenname2, 
-fromuser[u].tokenaddress1, fromuser[u].tokenaddress2, fromuser[u].digit1, 
-fromuser[u].digit2, fromuser[u].pricein, single);
-   innow.runfuncswap();
-
-     }
-}      
-
+getInstance(servernow){
+ return new WebSocketServer({server: servernow})
 }
 
 
-function arggraph(arg, wssx, ws){
-for(let v=0; v < arg.length; v=v+2){
-let graphsend = {"price": arg[v], 
-"time": arg[v+1]};
+ onnya(objectb) {
+     let thisbound = this;
+objectb.on("connection", function(ws){
+  // Cannot use this inside event listener, because this will point to event listener object
+   let self = new wsc;
+   Fetchdata.selfstorage.push(self);
+   //Every new connection will trigger this deadoralive checking
+       for(let y = 0; y < Fetchdata.selfstorage.length; y++){
+      if(Fetchdata.selfstorage[y].deadoralive === "dead"){
+            Fetchdata.selfstorage[y] = "";
+             Fetchdata.keepindex.push(y);
+       }
+    }
+   for(let k = 0; k < Fetchdata.keepindex.length; k++){
+            Fetchdata.selfstorage.splice(Fetchdata.keepindex[k], 1);
+}
+  Fetchdata.keepindex.length = 0;     
 
+  console.log(self.counter);   
+   self.ping(ws);
+
+ws.on("message", function(message){ 
+                
+        let waitret = self.processmess(message.toString(), ws);
+       if(waitret){
+// just using derefrence than delete to remove object refrence cause delete on works on object properties 
+// without let, var or const
+               self = "";
+               }
+
+ });
+
+
+thisbound.graphaccept = (arg) => {
+let graphsend = {"price": arg[0], 
+"time": arg[1]};
 ws.send(JSON.stringify(graphsend));
-
-};
 }
 
-function argwa(arg, wssx, ws) {
-for(let z=0; z <  arg.length; z++){
-
-let queuem = {"messagenya": arg[z]};
-
-ws.send(JSON.stringify(queuem));
-
-}
-}
-
-const keepalivefunc = () => {
-console.log("keepalivefunc in");  
-single.emit('keepaliveevent', '');
-   
-}
-
-let wssx = websock;
-
-wssx.on("connection", function connection(ws){
- 
-console.log("connect ws");
-
- ws.on("message", function incoming(message) {
-      let newmessage = message.toString();
-       let barumessage = JSON.parse(newmessage);
-
-
-if(barumessage.deleteall){
-    fromuser.length = 0;
-    clearInterval(setkeep);
-    clearInterval(setrun);
-}
-
-if(barumessage.deleteone){
-    console.log('masuk neh barumessage deleteone' + barumessage.deleteone);
-    fromuser.splice(barumessage.deleteone, 1);
-}
-
-if(barumessage.datanya){
-   for(let t = 0; t < barumessage.datanya.length; t++){
-
-  let dataToken = {
-chain: barumessage.datanya[t].chain, 
-dex: barumessage.datanya[t].dex,
-pricein: barumessage.datanya[t].pricein, 
-tokenname1: barumessage.datanya[t].tokenname1,
-tokenaddress1: barumessage.datanya[t].tokenaddress1, 
-digit1: barumessage.datanya[t].digittoken1,
-tokenname2: barumessage.datanya[t].tokenname2,
-tokenaddress2: barumessage.datanya[t].tokenaddress2, 
-digit2: barumessage.datanya[t].digittoken2,
-milisecondselapse: barumessage.datanya[t].milisecondselapse,
-currentts: barumessage.datanya[t].currentts,
-ntimes: barumessage.datanya[t].ntimes
-}
-
-      fromuser.push(JSON.parse(JSON.stringify(dataToken)));
-console.log("print dari fromuser" + dataToken.milisecondselapse);
-
-             }
-}
-
-if(barumessage.messagenya === "fromgui"){
-
-
-setkeep = setInterval(keepalivefunc, 5000);
-setrun = setInterval(runningnow, 5000);
-
-const graphaccept = (arg) => {
-if(arg === FetchToken1Token2.graphpolygonquick){
-   arggraph(arg, wssx, ws);
-   console.log('panjang arg' + arg.length);
-   arg.length = 0;
-}
-else if(arg === FetchToken1Token2.graphbscpancake){
- arggraph(arg, wssx, ws);
-   arg.length = 0;
-}
-}
-
-let countgraphsingle = single.listenerCount('sendgraph', 
-graphaccept);
-if(countgraphsingle < 1){
+thisbound.countgraphsingle = single.listenerCount('sendgraph', 
+thisbound.graphaccept);
+if(thisbound.countgraphsingle < 1){
   
-single.on('sendgraph', graphaccept);
+single.on('sendgraph', thisbound.graphaccept);
+}
+
+ })
 }
 
 
 
-const keeps = () => {
-let keep = {"message": "alivenow"};
-
-        ws.send(JSON.stringify(keep));
-console.log(JSON.stringify(keep)); 
-};
-
-
-let countkeepalive = single.listenerCount('keepaliveevent', keeps);
-if(countkeepalive < 1){
-  
-single.on('keepaliveevent', keeps);
-}
-
-
-}
-
-if(barumessage.messagenya === "fromext"){
-
-
-single.on('sendwa', function(arg){
-if(arg === FetchToken1Token2.wapolygonquick){
-argwa(arg, wssx, ws);
-arg.length = 0;
-}
-else if(arg === FetchToken1Token2.wabscpancake){
-argwa(arg, wssx, ws);
-arg.length = 0;
-}
-   
-});
-}
-
-});
-
-})
-}
 }
 
 module.exports = Fetchdata;

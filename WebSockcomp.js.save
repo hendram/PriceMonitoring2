@@ -1,0 +1,192 @@
+const FetchToken1Token2 = require('./FetchToken1Token2');
+const singleton = require('./Singleton');
+const single = singleton.getInstance();
+const Fetchdata = require('./Fetchdata');
+
+class WebSockcomp {
+fromuser = [];
+ newmessage = "";
+ barumessage = "";
+ datatoken = {};
+ newmessage = "";
+ barumessage = "";
+ countgraphsingle = NaN;
+ setrun = "";
+static counterwsc = 0;
+longertime = "";
+timeoutId = "";
+pongcount = "";
+deadoralive = "alive";
+
+constructor(){
+  this.counter = ++WebSockcomp.counterwsc ;
+};
+
+
+closeall(){
+  this.fromuser.length = 0;  
+    console.log(this.counter);
+// Timeout object return from setInterval has been assign to each wsc objects because wsc only created when new connection happen, through refresh, reconnect
+// browser
+    console.log('setrun' + this.setrun);
+    clearInterval(this.setrun); 
+    this.constructor.Fetchdata.keepcd.push(this.counter);
+}
+
+ping(ws) {
+      let pingthis = this;
+   if(this.deadoralive === "dead"){
+     clearTimeout(this.timeoutId);
+     clearTimeout(pingthis.longertime);
+    }
+else{
+
+      if(this.timeoutId){
+        clearTimeout(this.timeoutId);
+        }
+      ws.ping('waitreplay', function(){
+});
+
+this.pongcount = ws.listenerCount('pong');
+if(this.pongcount < 1){
+
+   ws.on('pong', (pongfunc) => {
+   console.log('longertime' + pingthis.longertime);
+             if(pingthis.longertime){
+             clearTimeout(pingthis.longertime);
+                }
+             pingthis.longertime = setTimeout(function(){ pingthis.closeall() }, 30000);
+}); 
+}
+
+  this.timoutId = setTimeout(() => {
+        pingthis.ping(ws);
+      }, 10000);
+}};
+
+runningnow(){
+             let datenow = Date.now();
+
+console.log(Object.getPrototypeOf(this));
+//Comparing length of polygon with countpolygon 
+for(let k=0; k < this.fromuser.length; k++){
+// Counting interval time need to run next code
+       if(((this.fromuser[k].milisecondselapse * this.fromuser[k].ntimes)
++ this.fromuser[k].currentts) <= datenow){
+     console.log('milisecondsel' + this.fromuser[k].milisecondselapse);
+     console.log('ntimes' + this.fromuser[k].ntimes);
+    console.log('currentts' + this.fromuser[k].currentts);
+     console.log('datenow' + datenow);
+
+   if(this.fromuser[k].chain === "Polygon"){
+    FetchToken1Token2.countpolygon = FetchToken1Token2.countpolygon + 1;
+}     
+    else if(this.fromuser[k].chain === "Bsc"){
+    FetchToken1Token2.countbsc = FetchToken1Token2.countbsc + 1;
+}
+}
+}
+ 
+
+           for(let u = 0; u < this.fromuser.length; u++){
+          if(((this.fromuser[u].milisecondselapse * this.fromuser[u].ntimes)
++ this.fromuser[u].currentts) <= datenow){
+                 this.fromuser[u].ntimes = this.fromuser[u].ntimes + 1;
+
+           let innow = new FetchToken1Token2(this.fromuser[u].chain,
+this.fromuser[u].dex, this.fromuser[u].tokenname1, this.fromuser[u].tokenname2, 
+this.fromuser[u].tokenaddress1, this.fromuser[u].tokenaddress2, this.fromuser[u].digit1, 
+this.fromuser[u].digit2, this.fromuser[u].pricein, single);
+   innow.runfuncswap();
+
+     }
+}      
+
+}
+
+
+processmess(messagenya, ws){
+ let itself = this;
+    this.newmessage = messagenya
+       this.barumessage = JSON.parse(this.newmessage);
+
+
+if(this.barumessage.deleteall){
+ this.closeall(); 
+   this.deadoralive = "dead";
+   return true;
+}  
+ 
+if(this.barumessage.deleteone){
+    console.log('masuk neh barumessage deleteone' + this.barumessage.deleteone);
+    this.fromuser.splice(barumessage.deleteone, 1);
+}  
+ 
+if(this.barumessage.datanya){
+   for(let t = 0; t < this.barumessage.datanya.length; t++){
+
+  this.dataToken = {
+chain: this.barumessage.datanya[t].chain, 
+dex: this.barumessage.datanya[t].dex,
+pricein: this.barumessage.datanya[t].pricein, 
+tokenname1: this.barumessage.datanya[t].tokenname1,
+tokenaddress1: this.barumessage.datanya[t].tokenaddress1, 
+digit1: this.barumessage.datanya[t].digittoken1,
+tokenname2: this.barumessage.datanya[t].tokenname2,
+tokenaddress2: this.barumessage.datanya[t].tokenaddress2, 
+digit2: this.barumessage.datanya[t].digittoken2,
+milisecondselapse: this.barumessage.datanya[t].milisecondselapse,
+currentts: this.barumessage.datanya[t].currentts,
+ntimes: this.barumessage.datanya[t].ntimes,
+}
+
+      this.fromuser.push(JSON.parse(JSON.stringify(this.dataToken)));
+console.log("print dari fromuser" + this.dataToken.milisecondselapse);
+
+             }
+}
+
+if(this.barumessage.messagenya === "fromgui"){
+
+// Bind will bind this function inside setInterval to object itself, not spawn into their own context
+this.setrun = setInterval(function(){itself.runningnow}, 5000);
+
+console.log(this.setrun);
+
+this.arggraph = (arg) => {
+for(let v=0; v < arg.length; v=v+2){
+let graphsend = {"price": arg[v], 
+"time": arg[v+1]};
+
+ws.send(JSON.stringify(graphsend));
+
+};
+}
+
+
+this.graphaccept = (arg) => {
+if(arg === FetchToken1Token2.graphpolygonquick){
+   this.arggraph(arg);
+ console.log('panjang arg' + arg.length);
+   arg.length = 0;
+}
+else if(arg === FetchToken1Token2.graphbscpancake){
+ this.arggraph(arg);
+   arg.length = 0;
+}
+}
+
+this.countgraphsingle = single.listenerCount('sendgraph', 
+this.graphaccept);
+if(this.countgraphsingle < 1){
+  
+single.on('sendgraph', this.graphaccept);
+}
+
+
+}
+
+}
+}
+
+module.exports = WebSockcomp, {Fetchdata};

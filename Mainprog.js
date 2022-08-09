@@ -6,8 +6,7 @@ const app = express();
 const happ = express();
 const fs = require("fs");
 const fetchd = require('./Fetchdata');
-const wss = require("ws");
-const WebSocketServer = wss.Server;
+
 
 app.use('/', express.static('../pricemongui/build'));
 happ.get('*', function(req, res) {
@@ -16,8 +15,8 @@ happ.get('*', function(req, res) {
 
 
 const options = {
-    key: fs.readFileSync("server.key"),
-    cert: fs.readFileSync("server.cert"),
+    key: fs.readFileSync("./server.key"),
+    cert: fs.readFileSync("./server.cert"),
 };
 
 var server = https.createServer(options, app);
@@ -29,5 +28,6 @@ server.listen(443, '', function(req, res) {
 const httpServer = http.createServer(happ);
 httpServer.listen(80); 
 
-new fetchd(new WebSocketServer({server: server}));
-
+let a = new fetchd();
+let b = a.getInstance(server);
+let c = a.onnya(b);
