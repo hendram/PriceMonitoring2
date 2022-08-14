@@ -2,9 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import MainPage from './MainPage';
 import './index.css';
+import { store } from './reduxstore/store';
+import { Provider } from 'react-redux';
+
 
 ReactDOM.render(
+    <Provider store={store} >
     <MainPage />,
+     </Provider>,
 document.getElementById('root')
 );
 

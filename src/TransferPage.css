@@ -1,0 +1,121 @@
+.divTransferPage {
+ position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: fit-content;
+  height: fit-content;
+  background-color: #edeb16;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 5%;
+}
+ 
+.divrow1tp {
+   display: flex;
+   flex-direction: column;
+   flex-wrap: wrap;
+   width: 100%;
+   height: fit-content;
+   padding-bottom: 2%;
+}
+ 
+.divrow2tp {
+   display: flex;
+   flex-direction: column;
+   flex-wrap: wrap;
+   width: 100%;
+   height: fit-content;
+   padding-bottom: 2%;
+}
+
+ 
+.divrow3tp {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   width: 100%;
+   height: fit-content;
+   padding-bottom: 2%;
+}
+
+ 
+.divrow4tp {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   width: 100%;
+   height: fit-content;
+   padding-bottom: 2%;
+}
+
+.fromspandivtp, .tospandivtp, .graphspandivtp, .pricespandivtp {
+  width:fit-content;
+  height: fit-content;
+  margin-right: 1%;
+}
+
+.fromspantp {
+  width:fit-content;
+  height: fit-content;
+  margin-right: 1%;
+}
+
+
+.tospantp {
+  width:fit-content;
+  height: fit-content;
+  margin-right: 1%;
+}
+
+
+.graphspantp {
+  width:fit-content;
+  height: fit-content;
+  margin-right: 1%;
+}
+
+
+.pricespantp {
+  width:fit-content;
+  height: fit-content;
+  margin-right: 1%;
+}
+
+.fromaddresstxt {
+width: 20vw;
+}
+
+.toaddresstxt {
+width: 20vw;
+}
+
+.graphorderedtxt {
+width: 5vw;
+}
+
+.pricetxt {
+width: 5vw;
+}
+
+.buttoncanceltp {
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 250;
+  border-radius: 10px;
+  color: red;
+  outline: none;
+}
+
+.buttonsubmittp {
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 250;
+  border-radius: 10px;
+  color: red;
+  outline: none;
+}
+
+
+

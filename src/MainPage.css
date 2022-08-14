@@ -75,13 +75,29 @@ body {
    display: block;
 }
 
-.buttonconnectdiv {
+.connectshdiv {
+   display: block;
    width: fit-content;
    height: fit-content;
    margin-left: auto;
    margin-right: 5%;
 }
 
+.connecthiddiv {
+  display: none;
+}
+
+.transfershdiv{
+  display: block;
+   width: fit-content;
+   height: fit-content;
+   margin-left: auto;
+   margin-right: 5%;
+}
+
+.transferhiddiv {
+   display: none;
+}
 
 .buttonconnect {
    border-radius: 10px;
@@ -97,6 +113,14 @@ body {
 }
 
 .walletconnsh {
+  display: block;
+}
+
+.transferpagehid {
+  display: none;
+}
+
+.transferpagesh {
   display: block;
 }
 

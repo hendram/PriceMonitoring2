@@ -1,29 +1,27 @@
 import React, { useState, ReactElement } from 'react';
 import './WalletConnection.css';
 import Metamsk from './images/metamask.png';
-import { ethers } from 'ethers';
+import { ethers, providers } from 'ethers';
 import Closingbuttonwal from './Closingbuttonwal';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { MetaMaskInpageProvider } from '@metamask/providers';
-// declare let window: unknown;
-
-type Datamet = {
-  address: string;
-  Balance: string;
-}
 
 type props = {
+  websock: WebSocket;
+  balancewal: Function;
+  accountwal: Function;
   closingwal: Function;
+  providerwal: Function;
 }
 
-const WalletConnection: React.FC<props> = ({closingwal,}: props): 
+const WalletConnection: React.FC<props> = ({websock, balancewal, accountwal, closingwal, providerwal}: props): 
 ReactElement => {
 
-const ethereum = window.ethereum as MetaMaskInpageProvider;
-
 const beginconnect = async () => {
-const provider: unknown = await detectEthereumProvider();
-if(provider) {
+const provide: unknown = await detectEthereumProvider();
+
+if(provide && (typeof provide === "object")) {
+   const provider =  provide as MetaMaskInpageProvider;
   startApp(provider);
 }
  else {
@@ -31,46 +29,42 @@ if(provider) {
 }
 }
 
-const [datamet, setDatamet] = useState<Datamet>({
-    address: "",
-    Balance: "",
-  });
-
-async function startApp(provider: unknown) {
+async function startApp(provider: MetaMaskInpageProvider) {
      if(provider !== window.ethereum) {
    console.error('Do you have multiple wallets installed?');
    }
-   const chainId: unknown = await ethereum.request({method: 'eth_chainId' });
+      else{
+   const chainId = await provider.request({method: 'eth_chainId' });
    if(typeof chainId === "string"){
-   handleChainChanged(chainId);
+   handleChainChanged(chainId, provider);
+}
 }
 }
 
-// ethereum.on('chainChanged', handleChainChanged);
+// ethereumwal.on('chainChanged', handleChainChanged);
 
-function handleChainChanged(chainId: string){
+function handleChainChanged(chainId: string, provider:MetaMaskInpageProvider){
     
 // don't compare chainId with parseInt never works
      if(ethers.utils.hexValue(chainId) !== ethers.utils.hexValue(80001)) {
-    changedchain();
+    changedchain(provider);
 }
   else {
-      getAccount();
+      getAccount(provider);
     }               
 }
 
-async function getAccount(){
+async function getAccount(provider: MetaMaskInpageProvider){
  /* if not using .then again, then need await as replacement */ 
- const connacct = await ethereum.request({ method: "eth_requestAccounts" });
+ const connacct = await provider.request({ method: "eth_requestAccounts" });
       if(connacct && Array.isArray(connacct)){
-        accountChange(connacct[0]);
+        accountChange(connacct[0], provider);
    }
-}
 
- ethereum.on('accountsChanged', (accounts) => {  
+ provider.on('accountsChanged', (accounts) => {  
       console.log('account dari getAccount' + JSON.stringify(accounts));
        if(accounts && Array.isArray(accounts)){
-        accountChange(accounts[0])
+        accountChange(accounts[0], provider);
    }
     else {
      console.log('tampilan error accounts' + accounts);
@@ -83,18 +77,20 @@ async function getAccount(){
 }
 });
 
-async function changedchain(){
-   const switchchain = await ethereum.request({
+}
+
+async function changedchain(provider: MetaMaskInpageProvider){
+   const switchchain = await provider.request({
        method: 'wallet_switchEthereumChain',
        params: [{ chainId: ethers.utils.hexValue(80001)}],
      });
   if(switchchain === null){
-          getAccount();
+          getAccount(provider);
    } 
    else {
       if(switchchain === 4902) {
          try {
-           await ethereum.request({
+           await provider.request({
              method: 'wallet_addEthereumChain',
              params: [
                 {
@@ -115,24 +111,27 @@ async function changedchain(){
 }
 }
 
-const getBalance = async (address: string) => {
+const getBalance = async (address: string, provider: MetaMaskInpageProvider) => {
     
-     const getBal =  await ethereum.request({
+     const getBal =  await provider.request({
              method: "eth_getBalance",
              params: [address, "latest"]
         });
 
 if(getBal && (typeof getBal === "string")){
-          setDatamet(newdatamet => ({...newdatamet, 
-  Balance: ethers.utils.formatEther(getBal)}));
+         balancewal(ethers.utils.formatEther(getBal));
 }
+providerwal(provider);
+
 };
 
-const accountChange = (account: string) => {
-        setDatamet(newdatamet => ({...newdatamet, 
-address: account}));
 
-      getBalance(account);
+
+const accountChange = (account: string, provider: MetaMaskInpageProvider) => {
+       accountwal(account);
+     let message = {accountaddr: account}
+       websock.send(JSON.stringify(message));
+      getBalance(account, provider);
 }
 
 const metconnect = (event: React.MouseEvent<HTMLImageElement>) => {
@@ -140,9 +139,6 @@ event.preventDefault();
 beginconnect();
 
 }
-
-console.log(datamet.address);
-console.log(datamet.Balance);
 
 
     return(

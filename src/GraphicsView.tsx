@@ -4,6 +4,7 @@ import LineGPage from './LineGPage';
 import  './GraphicsView.css'
 
 type props = {
+  wss: WebSocket;
   addg: string;
   returnback: Function;
 }   
@@ -24,8 +25,9 @@ currentts: number;
 ntimes: number;
 }
 
+
 // addg props to control when addgraph menu can respon to click again after add new graph
-const GraphicsView: React.FC<props> =({addg, returnback,}: props):
+const GraphicsView: React.FC<props> =({wss, addg, returnback,}: props):
 ReactElement => {
 
 
@@ -81,7 +83,7 @@ return(
     addprop={tokeninpageprop.addprop}  />
 </div>
 <div className="linegpagegv">
-  <LineGPage datalinegpage={datatok} />
+  <LineGPage websock={wss} datalinegpage={datatok} />
 </div>
 </div>
 )

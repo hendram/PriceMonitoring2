@@ -2,7 +2,8 @@ import React, {useState, useRef, useEffect, ReactElement} from 'react';
 import LineChart from './LineChart'
 import Closingbutton from './Closingbutton'
 import './LineGPage.css';
-import Singletonws from './Singletonws';
+import { useAppDispatch } from './hook/hooks';
+import { accounttrue, accountfalse } from './reduxslice/accountslice';
 
 type Pricetime = {
  x: string;
@@ -44,6 +45,7 @@ heightlast: number;
 
 
 type props = {
+  websock: WebSocket;
   datalinegpage: Listdatain | null;
  }
 
@@ -54,13 +56,8 @@ afteronelock: string;
 }
 
 
-const LineGPage: React.FC<props> = ({datalinegpage}: props):
+const LineGPage: React.FC<props> = ({websock, datalinegpage}: props):
 ReactElement => {
-
-const url="wss://localhost";
-// using useRef for Websocket singleton will makes more controllabel and
-// predictable when new instance need it
-const websock = useRef<WebSocket>(Singletonws.getInstance());
 
 
 const allpricetime = useRef<Array<AllPricein>>([]);
@@ -71,16 +68,7 @@ let listdatain: Listdatain | null  = null;
 const widhehold = useRef<Array<widheset>>([]);
 const [lchartdata, setLchartdata] = useState<JSX.Element[]>([]);
 const divlchart = useRef<Array<SVGchange>>([]);
-
-      websock.current.onopen = () => {
- const message = { messagenya: "fromgui" }
-        websock.current.send(JSON.stringify(message));
-}             
-
-window.addEventListener('unload', function(event){
-        let message = {deleteall: "windowclose"};
-          websock.current.send(JSON.stringify(message));
-   });
+const dispatch = useAppDispatch();
 
 // set and delete table number using useEffect after user click delete chart
 
@@ -104,7 +92,7 @@ const tlinecex = (tnumin: number) => {
 // while only string accepted for websock send
 
 
-  websock.current.send(JSON.stringify(message));
+  websock.send(JSON.stringify(message));
                      rerenderlchart();              
                     
 
@@ -137,7 +125,7 @@ const handlemouseleavefunc = (idnya: number) => {
 
 useEffect(() => {
 if(datalinegpage && 
-websock.current.readyState === WebSocket.OPEN){
+websock.readyState === WebSocket.OPEN){
      console.log('masuk useeffect datalinegpage linegpage');
       let goodform = JSON.parse(JSON.stringify(datalinegpage));
 // Check if allpricetime array has tokenname2 data already or not
@@ -160,7 +148,7 @@ websock.current.readyState === WebSocket.OPEN){
 
      console.log("message datanya " + JSON.stringify(message.datanya));
       
-          websock.current.send(JSON.stringify(message));
+          websock.send(JSON.stringify(message));
 
 
 
@@ -187,7 +175,7 @@ rerenderlchart();
 
 console.log("panjang lchartdata "+ lchartdata.length);
 
-          websock.current.onmessage = (e) => {
+          websock.onmessage = (e) => {
              console.log(JSON.parse(e.data));
          if(JSON.parse(e.data).price && JSON.parse(e.data).time){
   let splitresult = JSON.parse(e.data).price.split(' ');
@@ -218,6 +206,10 @@ console.log("panjang lchartdata "+ lchartdata.length);
 }
 
 }
+     else if(JSON.parse(e.data).account === "false"){
+         dispatch(accountfalse());
+}
+
 }
 
 // using useRef in this function, cause useState cannot rerender at all
