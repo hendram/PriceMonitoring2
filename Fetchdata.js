@@ -41,15 +41,26 @@ objectb.on("connection", function(ws){
   console.log(self.counter);   
    self.ping(ws);
 
-ws.on("message", function(message){ 
-                
-        let waitret = self.processmess(message.toString(), ws);
-       if(waitret){
-// just using derefrence than delete to remove object refrence cause delete on works on object properties 
-// without let, var or const
-               self = "";
-               }
+ws.on('close', function() {
+    self = "";
+});
 
+ws.on("message", function(message){ 
+// Instance of wrap object should not be going inside instance of wrapped object, if not
+// then instance of wrapped object cannot be detach                
+        self.processmess(message.toString());
+
+      if(self.accountmess === "yes"){
+               self.checkaccountexist().then(() => {
+             console.log('dalam accountmess');
+            if(self.accountexist === "true"){
+   }
+      else if(self.accountexist === "false"){
+    ws.send(JSON.stringify({account: "false"}));
+   console.log('sudah kirim ws');
+   }
+});
+}
  });
 
 

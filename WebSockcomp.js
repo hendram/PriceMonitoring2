@@ -1,4 +1,6 @@
 const go = require('./GraphObject');
+const checkaccountdb = require('./CheckAccountdb');
+const insertaccountdb = require('./InsertAccountdb');
 
 class WebSockcomp {
  newmessage = "";
@@ -12,6 +14,9 @@ pongcount = "";
 deadoralive = "alive";
 goarr = [];
 goarrdel = NaN;
+accountmess = "no";
+accountexist = "";
+accountid = "";
 
 constructor(){
   this.counter = ++WebSockcomp.counterwsc ;
@@ -65,16 +70,28 @@ if(this.pongcount < 1){
       }, 10000);
 }};
 
+async checkaccountexist(){
+  let resultaddr = await checkaccountdb.checkdbaccount(this.accountid);
+console.log('nilain dari resultaddr' + resultaddr);
+ if(resultaddr === "find") {
+   this.accountexist="true";
+}
+   else if(resultaddr === "notfind"){
+    this.accountexist="false";
+     console.log('dalam accountexist false');
+}
+
+}
 
 processmess(messagenya){
     this.newmessage = messagenya
        this.barumessage = JSON.parse(this.newmessage);
 
 
-if(this.barumessage.deleteall){
- this.closeall(); 
-   return true;
-}  
+if(this.barumessage.accountaddr){
+   this.accountmess = "yes";
+ this.accountid = this.barumessage.accountaddr;
+}
  
 if(this.barumessage.deleteone){
     console.log('masuk neh barumessage deleteone' + this.barumessage.deleteone);
