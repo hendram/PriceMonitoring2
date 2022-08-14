@@ -36,8 +36,7 @@ const dispatch = useAppDispatch();
 }
 
 window.addEventListener('unload', function(event){
-        let message = {deleteall: "windowclose"};
-          wsock.current.send(JSON.stringify(message));
+          wsock.current.onclose = () => { } 
    });
 
  
