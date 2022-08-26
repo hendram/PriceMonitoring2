@@ -1,26 +1,26 @@
-const Mongoclient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient;
 
-
-
-function insertdbaccount(accountaddr){
 
 const url = "mongodb://localhost:27017/";
+const client = new MongoClient(url);
 
-Mongoclient.connect(url, function(err, db) {
-    if(err) throw err;
-     const dbo = db.db("account");
-     const myobj = { accountaddress: accountaddr };
-     dbo.collection("accountcoll").insertOne(myobj, function(err,res) {
-        if(err) {
+async function insertdbaccount(accountaddr, stampthreem){
+
+try {
+     await client.connect()
+     const dbo = client.db("account");
+     const myobj = { accountaddress: accountaddr, stampthreemonth: stampthreem };
+      const returninsert = await dbo.collection("accountcoll").insertOne(myobj);
+        if(returninsert === null) {
            console.log("failed to insert dbid");
-        db.close();
          }
-       else if(res){
-        console.log("1 document inserted");
-        db.close();
+       else if(returninsert){
+           return "1inserted";
        }
-     });
-});
+}
+finally {
+        await client.close();
+}   
 }
 
 module.exports = {insertdbaccount};

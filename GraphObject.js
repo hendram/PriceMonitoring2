@@ -8,19 +8,20 @@ innow = "";
  setrun = "";
 
    constructor(chain, dex, pricein, tokenname1, tokenaddress1, digittoken1, tokenname2, 
-tokenaddress2, digittoken2, milisecondselapse, currentts, ntimes){
+tokenaddress2, digittoken2, milisecondselapse, currentts, ntimes, threemonthstamp){
 this.chain = chain; 
 this.dex = dex;
 this.pricein = pricein; 
 this.tokenname1 = tokenname1;
 this.tokenaddress1 = tokenaddress1; 
-this.digit1 = digittoken1;
+this.digittoken1 = digittoken1;
 this.tokenname2 = tokenname2;
 this.tokenaddress2 = tokenaddress2; 
-this.digit2 = digittoken2;
+this.digittoken2 = digittoken2;
 this.milisecondselapse = milisecondselapse;
 this.currentts = currentts;
 this.ntimes = ntimes;
+this.threemonthstamp = threemonthstamp;
 }
 
 rungraphobj() {
@@ -33,11 +34,15 @@ console.log(this.setrun);
 }
 
 runningnow(){
+   let timenow = new Date();
+  if(this.threemonthstamp <= timenow){
+    single.emit('deletethists', this.threemonthstamp);
+  } 
 
           this.innow = new FetchToken1Token2(this.chain,
 this.dex, this.tokenname1, this.tokenname2, 
-this.tokenaddress1, this.tokenaddress2, this.digit1, 
-this.digit2, single);
+this.tokenaddress1, this.tokenaddress2, this.digittoken1, 
+this.digittoken2, single);
    this.innow.runfuncswap();
 
 }

@@ -48,20 +48,42 @@ ws.on('close', function() {
 ws.on("message", function(message){ 
 // Instance of wrap object should not be going inside instance of wrapped object, if not
 // then instance of wrapped object cannot be detach                
-        self.processmess(message.toString());
+        self.processmess(message.toString()).then(() => {
 
       if(self.accountmess === "yes"){
                self.checkaccountexist().then(() => {
              console.log('dalam accountmess');
-            if(self.accountexist === "true"){
+            if(self.accountexist === "true" && self.justindel === "no"){
+         self.populategraph().then(() => {
+             let goarrforsend = [];
+
+              for(let h = 0; h < self.goarr.length; h++){
+                  goarrforsend.push({chain: self.goarr[h].chain, dex: self.goarr[h].dex,
+    tokenname: self.goarr[h].tokenname2, tokenanchor: self.goarr[h].tokenname1,
+ pricein: self.goarr[h].pricein, threemonthstamp: self.goarr[h].threemonthstamp})
+}
+    ws.send(JSON.stringify({account: "true", accountid: self.accountid, balanceval: self.balanceval}));
+          ws.send(JSON.stringify({goarrlist: goarrforsend}));
+    });
    }
+          else if(self.accountexist === "true" && self.justindel === "yes"){
+              let threemonthstamparr = [];
+              console.log('inside accountexist true and justindel yes');
+               for(let z = 0; z < self.goarr.length; z++){
+                   if(self.goarr[z].threemonthstamp){
+                         threemonthstamparr.push(self.goarr[z].threemonthstamp);
+}           
+}
+          ws.send(JSON.stringify({threemonthstamplist: threemonthstamparr}));
+}
       else if(self.accountexist === "false"){
-    ws.send(JSON.stringify({account: "false"}));
+    ws.send(JSON.stringify({account: "false", accountid: self.accountid, balanceval: self.balanceval}));
    console.log('sudah kirim ws');
    }
 });
 }
- });
+});  // self.processmess closing
+ }); //ws.onmessage closing 
 
 
 thisbound.graphaccept = (arg) => {

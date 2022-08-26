@@ -4,7 +4,7 @@ const _ = require('underscore');
 const url = "mongodb://localhost:27017/";
 const client = new MongoClient(url);
 
-async function checkdbaccount(accountaddr) {
+async function checkdbtimestamp(accountaddr) {
 try {
     await client.connect()
     const database = client.db('account');
@@ -16,15 +16,15 @@ try {
       return "notfind";
     }       
     else if((exist != null) && (query.accountaddress === exist.accountaddress)) {
-            return "find";
+            return exist;
 }
 }
-finally {
-   await client.close();
-}
-
+finally{
+await client.close();
 }
 
+}
 
-module.exports = {checkdbaccount};
+
+module.exports = {checkdbtimestamp};
 
