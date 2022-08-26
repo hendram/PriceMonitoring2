@@ -1,0 +1,79 @@
+.toprightdiv {
+  display: flex;
+  flex-direction: rows;
+  width: fit-content;
+  height: fit-content;
+  align-self: flex-end;
+  padding-bottom: 15px;
+  gap: 0%;
+}
+
+.extendtsdivsh {
+  display: block;
+}
+
+.extendtsdivhid {
+ display: none;
+}
+
+.shextsdivsh {
+  display: flex;
+  flex-direction: column;    
+  width: fit-content;
+  height: fit-content;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0%;
+  align-self: flex-end;
+  border: 1px solid red;
+}
+
+.shextsdivhid {
+display: none;
+}
+
+.extendtsdiv {
+display: block;
+width: fit-content;
+border: 1px solid black;
+}
+
+.extendtsbutton {
+ background-color: transparent;
+ border: none;
+ cursor: pointer;
+ outline: none;
+ font-family: serif;
+}
+
+.showtsdiv {
+ display: block;
+ width: fit-content;
+ border: 1px solid black;
+}
+
+.showtsbutton {
+ background-color: transparent;
+ border: none;
+ cursor: pointer;
+ outline: none;
+ font-family: serif;
+}
+
+.buttonsmalldiv {
+ display: block;
+}
+
+.buttonsmallclose {
+  border-radius: 5px;
+  border-color: black;
+  background-color: #e28606;
+  font-family: serif;
+}
+
+.buttonextendshow {
+  border-radius: 5px;
+  border-color: black;
+  background-color: #e28606;
+  font-family: serif;
+}

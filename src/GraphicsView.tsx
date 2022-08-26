@@ -6,6 +6,7 @@ import  './GraphicsView.css'
 type props = {
   wss: WebSocket;
   addg: string;
+  initmember: string;
   returnback: Function;
 }   
 
@@ -23,11 +24,15 @@ digittoken2: string;
 milisecondselapse: number;
 currentts: number;
 ntimes: number;
+threemonthstamp: string;
+initmember: string;
 }
 
 
-// addg props to control when addgraph menu can respon to click again after add new graph
-const GraphicsView: React.FC<props> =({wss, addg, returnback,}: props):
+// addg props to control when addgraph menu can respon to click again after add new graph, from yesno
+// initmember props from formember to make dialog addgraph question not show up first when graph add it
+ 
+const GraphicsView: React.FC<props> =({wss, addg, initmember, returnback,}: props):
 ReactElement => {
 
 
@@ -60,9 +65,17 @@ graphicsviewdiv: "divtokeninpagebottom" };
 console.log('masuk tokeninpageneddhid');
 }
 
+useEffect(() => {
+ if(initmember === "yes"){
+    let newtokeninpageprop = {addprop: "no",
+vis: "tokeninpagehid", beforegraph: "no", graphicsviewdiv: "divtokeninpagetop" };
+    setTokeninpageprop(newtokeninpageprop);
+}
+}, [initmember]);
 
 useEffect(() => {
 if(addg === "yes") {
+// beforegraph to add another lock to make sure only addg yes and graph already exist can execute code
     if(tokeninpageprop.beforegraph === "no"){
       let newtokeninpageprop = {addprop: "yes", 
 vis: "tokeninpagesh",  beforegraph: "no", 

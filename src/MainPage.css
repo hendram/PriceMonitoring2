@@ -99,7 +99,55 @@ body {
    display: none;
 }
 
+.connectedshdiv{
+ display: block;
+   width: fit-content;
+   height: fit-content;
+   margin-left: auto;
+   margin-right: 5%;
+}
+
+.connectedhiddiv {
+  display: none;
+}
+
 .buttonconnect {
+   border-radius: 10px;
+   color: #1618ed;
+   font-size: x-large;
+   font-family: serif;
+   background-color: #edeb16;
+   outline: none;
+}
+
+.buttontransfer {
+   border-radius: 10px;
+   color: #1618ed;
+   font-size: x-large;
+   font-family: serif;
+   background-color: #edeb16;
+   outline: none;
+}
+
+.buttonconnected {
+   border-radius: 10px;
+   color: #1618ed;
+   font-size: x-large;
+   font-family: serif;
+   background-color: #edeb16;
+   outline: none;
+}
+
+.buttonmenu {
+   border-radius: 10px;
+   color: #1618ed;
+   font-size: x-large;
+   font-family: serif;
+   background-color: #edeb16;
+   outline: none;
+}
+
+.buttonaddsub {
    border-radius: 10px;
    color: #1618ed;
    font-size: x-large;
@@ -123,4 +171,24 @@ body {
 .transferpagesh {
   display: block;
 }
+
+.addmenuhid {
+  display: none;
+}
+
+.addmenush {
+  display: block;
+  width: fit-content;
+  height: fit-content;
+}
+
+.addtshid {
+  display: none;
+}
+
+.addtssh {
+  display: block;
+  z-index: 999;
+  position: absolute;
+  }
 

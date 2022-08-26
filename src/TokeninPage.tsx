@@ -29,6 +29,7 @@ type Countertype = {
 counter: number;
 }
 
+// addprop yes will make tokeninputask dialog question to popup 
 const TokeninPage: React.FC<props> = ({addprop, senddatatoken, tokeninpagech}: props): 
 ReactElement => {
 

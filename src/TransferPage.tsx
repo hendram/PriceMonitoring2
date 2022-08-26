@@ -3,15 +3,14 @@ import './TransferPage.css';
 
 type props = {
 accountpass: string;
-// ethereumtrans: object;
 closingtrans: Function;
+sendtransfunc: Function;
 }
 
 
-const TransferPage : React.FC<props> = ({accountpass, closingtrans}: props): ReactElement => {
-    
-const fromaddress = useRef<HTMLInputElement>(null);
-const toaddress = useRef<HTMLInputElement>(null);
+const TransferPage : React.FC<props> = ({accountpass, 
+closingtrans, sendtransfunc}: props): ReactElement => {
+
 const graphordered = useRef<HTMLInputElement>(null);
 const [price, setPrice] = useState<number>(NaN);
 
@@ -19,7 +18,7 @@ const Changeprice = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if((graphordered.current !== null) && (graphordered.current.value)){
          let newprice = price;
-             newprice = Math.floor(Number(graphordered.current.value));
+             newprice = (Number(graphordered.current.value)/10);
              setPrice(newprice);
 }
 }
@@ -31,7 +30,7 @@ const handleCancel = (event: React.MouseEvent<HTMLButtonElement>) => {
 
 const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
-     
+       sendtransfunc(price);     
 }
 
 return(
@@ -41,7 +40,7 @@ return(
      <span className="fromspantp"> From: </span>
    </div>
      <div className="frominputdivtp">
-      <input type="text" ref={fromaddress} maxLength={20} className="fromaddresstxt"
+      <input type="text" maxLength={30} className="fromaddresstxt"
  value={accountpass} readOnly/>
     </div>
 </div>
@@ -50,23 +49,23 @@ return(
       <span className="tospantp"> To: </span>
       </div>
       <div className="toinputdivtp">
-     <input type="text" ref={toaddress} maxLength={20} className="toaddresstxt" 
-  value='0x42B1765F1C41024ee66E5ef9fA73d9963B23761A' readOnly/>
+     <input type="text" maxLength={30} className="toaddresstxt" 
+  value='0xB080b617c9c4C74f0A69291Bfe92f3Ca4579DCdF' readOnly/>
       </div>
 </div>
 <div className="divrow3tp">
       <div className="graphspandivtp">
-      <span className="graphspantp"> Number of Graph ordered: </span>
+      <span className="graphspantp"> Graph: </span>
       </div>
       <div className="graphinputdivtp">
-       <input type="text" ref={graphordered} maxLength={5} className="graphorderedtxt"
+       <input type="text" ref={graphordered} maxLength={3} className="graphorderedtxt"
   onChange={(e) => Changeprice(e)} />
        </div>
        <div className="pricespandivtp" >
        <span className="pricespantp">Price: </span>
        </div>
        <div className="priceinputdivtp" >
-        <input type="text" value={price} maxLength={5} className="pricetxt" readOnly
+        <input type="text" value={price} maxLength={3} className="pricetxt" readOnly
  />
         </div>
 </div>

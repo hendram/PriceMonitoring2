@@ -1,43 +1,48 @@
 import React, { useState, ReactElement } from 'react';
 import './WalletConnection.css';
 import Metamsk from './images/metamask.png';
-import { ethers, providers } from 'ethers';
+import { ethers } from 'ethers';
 import Closingbuttonwal from './Closingbuttonwal';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { MetaMaskInpageProvider } from '@metamask/providers';
 
 type props = {
   websock: WebSocket;
-  balancewal: Function;
-  accountwal: Function;
   closingwal: Function;
   providerwal: Function;
 }
 
-const WalletConnection: React.FC<props> = ({websock, balancewal, accountwal, closingwal, providerwal}: props): 
+const WalletConnection: React.FC<props> = ({websock, closingwal, providerwal}: props): 
 ReactElement => {
 
 const beginconnect = async () => {
 const provide: unknown = await detectEthereumProvider();
 
 if(provide && (typeof provide === "object")) {
-   const provider =  provide as MetaMaskInpageProvider;
-  startApp(provider);
+  startApp(provide);
 }
  else {
    console.log('please install metamask');
 }
 }
 
-async function startApp(provider: MetaMaskInpageProvider) {
-     if(provider !== window.ethereum) {
+
+async function startApp(provide: object) {
+  try { 
+    if(provide !== window.ethereum) {
    console.error('Do you have multiple wallets installed?');
    }
       else{
+   const provider =  provide as MetaMaskInpageProvider;
+
    const chainId = await provider.request({method: 'eth_chainId' });
    if(typeof chainId === "string"){
    handleChainChanged(chainId, provider);
 }
+}
+}
+catch(error){
+console.log(error);
 }
 }
 
@@ -112,25 +117,28 @@ async function changedchain(provider: MetaMaskInpageProvider){
 }
 
 const getBalance = async (address: string, provider: MetaMaskInpageProvider) => {
-    
+try{    
      const getBal =  await provider.request({
              method: "eth_getBalance",
              params: [address, "latest"]
         });
 
 if(getBal && (typeof getBal === "string")){
-         balancewal(ethers.utils.formatEther(getBal));
+         let balance = ethers.utils.formatEther(getBal);
+     let message = {accountaddr: address, balanceval: balance}
+       websock.send(JSON.stringify(message));          
 }
 providerwal(provider);
-
+}
+catch(error){
+console.log(error);
+}
 };
 
 
 
 const accountChange = (account: string, provider: MetaMaskInpageProvider) => {
-       accountwal(account);
-     let message = {accountaddr: account}
-       websock.send(JSON.stringify(message));
+
       getBalance(account, provider);
 }
 

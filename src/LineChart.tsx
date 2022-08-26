@@ -27,12 +27,14 @@ type props = {
    handlemouseenter: Function;
    handlemouseleave: Function;
    afterlength: Function;
+   currentts: string;
+   showtsbelow: string;
 }
 
 
 const LineChart: React.FC<props> = ({data, namatoken,tokenacuan,
    priceawal, widhesetlc, id, widhenow, divwait, svghs, handlemouseenter,
-   handlemouseleave, afterlength}: props): ReactElement => {
+   handlemouseleave, afterlength, currentts, showtsbelow}: props): ReactElement => {
 
 
 const resizeObserver = React.useRef<ResizeObserver>(new 
@@ -149,7 +151,6 @@ else {
 if(data.length > 1){
 
   afterlength(id);
-
  
   const w = (getLabelMaxX()-getLabelMinX());
   console.log(widhenow.width);
@@ -167,6 +168,14 @@ else {
  initxpos = b.toString().length * 8;
  
 }  
+
+let datecur = new Date(currentts);
+let showtsnow = datecur.getDate()+
+          "/"+(datecur.getMonth()+1)+
+          "/"+datecur.getFullYear()+
+          " "+datecur.getHours()+
+          ":"+datecur.getMinutes()+
+          ":"+datecur.getSeconds();
 
 //for generating x data
    for(let p=initxpos, u=0; p < (data.length * maxpointx) + initxpos,
@@ -201,6 +210,11 @@ pricein</text>
 <text x={initxpos + xtextrect} y={ydata + yaddtext} fill="black" 
 style={{font: '1em bold sans-serif'}} >
 profit price</text>
+<text x={initxpos + xtextrect} y={ydata + yaddtext + 20} fill="black" 
+style={{font: '1em bold sans-serif'}}  className={showtsbelow}>
+ {showtsnow}      
+</text>
+
 </g>  
  
 }
