@@ -34,11 +34,14 @@ console.log(this.setrun);
 }
 
 runningnow(){
+ if(this.threemonthstamp !== ""){
    let timenow = new Date();
   if(this.threemonthstamp <= timenow){
-    single.emit('deletethists', this.threemonthstamp);
+   console.log('inside threemonthstamp outdated');
+    single.emit('removethists', "true", this.chain, this.dex, this.tokenname2, this.tokenname1,
+    this.pricein);
   } 
-
+}
           this.innow = new FetchToken1Token2(this.chain,
 this.dex, this.tokenname1, this.tokenname2, 
 this.tokenaddress1, this.tokenaddress2, this.digittoken1, 

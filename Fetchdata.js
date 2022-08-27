@@ -83,6 +83,29 @@ ws.on("message", function(message){
 });
 }
 });  // self.processmess closing
+
+thisbound.removefunc = (arg0, arg1, arg2, arg3, arg4, arg5) => {
+   let messagenya = {deleteone: {delme: arg0, chain: arg1, dex: arg2, tokenname2: arg3, tokenname1: arg4,
+     pricein: arg5}}; 
+    self.processmess(JSON.stringify(messagenya)).then(() => {
+                let threemonthstamparr = []; 
+              for(let z = 0; z < self.goarr.length; z++){
+                   if(self.goarr[z].threemonthstamp){
+                         threemonthstamparr.push(self.goarr[z].threemonthstamp);
+}           
+}
+      ws.send(JSON.stringify({threemonthstamplist: threemonthstamparr, deletedindex: self.deletedgoarr}));
+});       
+}
+
+
+thisbound.countremovefunc = single.listenerCount('removethists', 
+thisbound.removefunc);
+if(thisbound.countremovefunc < 1){
+  
+single.on('removethists', thisbound.removefunc);
+}
+
  }); //ws.onmessage closing 
 
 
@@ -98,6 +121,7 @@ if(thisbound.countgraphsingle < 1){
   
 single.on('sendgraph', thisbound.graphaccept);
 }
+
 
  })
 }

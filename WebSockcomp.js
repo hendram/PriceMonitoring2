@@ -7,6 +7,7 @@ const deleteagoarrdb = require('./DeleteGoarrdb');
 const checkgoarrdb = require('./CheckGoarrdb');
 const countgoarrdb = require('./CountGoarrdb');
 const updateaccountdb = require('./UpdateAccountdb');
+const updategoarrdb = require('./UpdateGoarrdb');
 const removeallgoarr = require('./RemoveAllGoarr');
 const checktimestampdb = require('./CheckTimestampdb');
 
@@ -28,6 +29,7 @@ balanceval = "";
 resultcounting = NaN;
 goarrstamp = 0;
 justindel = "no";
+deletedgoarr = [];
 
 constructor(){
   this.counter = ++WebSockcomp.counterwsc ;
@@ -81,6 +83,46 @@ if(this.pongcount < 1){
       }, 10000);
 }};
 
+async removetimestamp(argrem){
+try {
+ let indexforts = NaN;
+ let resgoarr = await checkgoarrdb.checkgoarraccount(this.accountid);
+     if(resgoarr){
+// resgoarr just to get on which index in goarr db this expired timestamp reside
+console.log('inside removetimestamp');
+       for(let v = 0; v < resgoarr.length; v++){
+         if(resgoarr[v].chainname === argrem.chain && resgoarr[v].dexname === argrem.dex &&
+  resgoarr[v].tokenname2tok === argrem.tokenname2 && resgoarr[v].tokenname1tok === argrem.tokenname1 &&
+  resgoarr[v].priceinnow === argrem.pricein){
+         await updategoarrdb.updatedbgoarr(resgoarr[v].chainname, resgoarr[v].dexname,
+  resgoarr[v].tokenname1tok, resgoarr[v].tokenname2tok, resgoarr[v].priceinnow); 
+         indexforts = v;
+    }   
+}
+}
+this.goarr[indexforts].threemonthstamp = "";
+let safetygoarr = this.goarr[indexforts];
+this.goarr.push(safetygoarr);
+this.goarr.splice(indexforts, 1);
+this.deletedgoarr.push(indexforts);
+
+ let resultaddress = await checktimestampdb.checkdbtimestamp(this.accountid); 
+
+  let arraystamp =  resultaddress.stampthreemonth;
+           arraystamp.splice(indexforts, 1);
+    if(arraystamp.length !== 0){
+  const resultinsert = await updateaccountdb.updatedbaccount(this.accountid, arraystamp);
+}
+    else{
+              await deleteaccountdb.deletedbaccount(this.accountid);
+}
+}
+catch(error){
+  console.log(error);
+}
+
+}
+
 async populategraph(){
 try{
   this.goarr.length = 0;
@@ -129,7 +171,7 @@ try{
   let arraystamp =  resultaddr.stampthreemonth;
      let threemonthnow =  arraystamp[argtot.idgraph];         
 //     let threemonthnownew = threemonthnow + (argtot.extendorder * 90 * 24 * 3600 * 1000);
-     let threemonthnownew = threemonthnow + (argtot.extendorder * 120 * 1000);
+     let threemonthnownew = threemonthnow + (argtot.extendorder * 60 * 1000);
 
     arraystamp.splice(argtot.idgraph, 1);
          arraystamp.push(threemonthnownew);
@@ -152,7 +194,7 @@ if(resultaddr !== "notfind"){
 }
 if(arraystamp.length !== 0){
 // let timeafterthreemonth = arg1.currenttimestadd + ( 90 * 24 * 3600 * 1000 );  
- let timeafterthreemonth = arg1.currenttimestadd + ( 120 * 1000 );  
+ let timeafterthreemonth = arg1.currenttimestadd + ( 60 * 1000 );  
    let resultcounting = arg1.orderedvaladd;
    console.log('hasil result counting' + resultcounting);
     console.log('hasil dari timeafterthreemonth' + timeafterthreemonth);
@@ -175,7 +217,7 @@ async txnumberbegin(arg1){
 try{ 
 
 // let timeafterthreemonth = arg1.currenttimest + ( 90 * 24 * 3600 * 1000 );  
- let timeafterthreemonth = arg1.currenttimest + ( 120 * 1000 );  
+ let timeafterthreemonth = arg1.currenttimest + ( 60 * 1000 );  
 
    let resultcounting = arg1.orderedval;
    console.log('hasil result counting' + resultcounting);
@@ -239,7 +281,16 @@ try{
   console.log('isi dari resultaddr' + resultaddr);
   let arraystamp =  resultaddr.stampthreemonth;
 
+
+// removing all goarr data from database and removing threemonthstamp properties from all go object first 
         await removeallgoarr.removegoarraccount();
+       for(let s = 0; s < this.goarr.length; s++){
+                this.goarr[s].threemonthstamp = "";
+     }
+
+
+// add goarr data into database again from goarr array here and updating go threemonthstamp properties
+// if x or y has finish, then loop will stop which one first
 
    for(let x = 0, y = 0; x < arraystamp.length, y < this.goarr.length; x++, y++){
       if((this.goarr[y] === undefined) || (arraystamp[x] === undefined)){
@@ -323,7 +374,10 @@ if(this.barumessage.txnumberadd){
 if(this.barumessage.deleteone){
    let bdo = this.barumessage.deleteone;
      let goarrdel = NaN;
-
+if(bdo.delme){
+     await this.removetimestamp(bdo);
+}
+else{
     console.log('masuk neh barumessage deleteone' + this.barumessage.deleteone);
      for(let w = 0; w < this.goarr.length; w++){
         if((this.goarr[w].chain === bdo.chain) &&
@@ -342,6 +396,7 @@ if(this.accountexist === "true"){
       await this.recycletoback(bdo);
 }
 
+}
 }  
 
  
