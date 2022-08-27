@@ -253,7 +253,7 @@ height: NaN, widthlast: NaN, heightlast: NaN});
 divwaithidorsh: "divwaitsh", afteronelock: "no"}); 
 
 if(c && (typeof c === "object")){
-     c.showaddmenu();
+     c.showaddmenu("false");
 }
 }
 
@@ -265,14 +265,30 @@ if(d && (typeof d === "object")){
 }
 
      else if(JSON.parse(e.data).threemonthstamplist){
+             if((JSON.parse(e.data).deletedindex) && (JSON.parse(e.data).deletedindex.length !== 0)){
+              let dindex = JSON.parse(e.data).deletedindex;
+                   for(let p = 0; p < dindex.length; p++){
+         allpricetime.current.push(allpricetime.current.splice(dindex[p],1)[0]);              
+}
+}
                 let threemonthlist = JSON.parse(e.data).threemonthstamplist;
-               for(let u = 0; u < threemonthlist.length; u++){
+               for(let u = 0; u < allpricetime.current.length; u++){
+                 if((threemonthlist[u]) && (threemonthlist[u] !== "")){
                   allpricetime.current[u].threemonthstamp = threemonthlist[u];
+    }
+    else {
+                  allpricetime.current[u].threemonthstamp = "";
+}   
 }
 
 
 if(c && (typeof c === "object")){
-     c.showaddmenu();
+     if(threemonthlist.length !== 0){
+     c.showaddmenu("false");
+}
+    else {
+     c.showaddmenu("true");
+}
 }
           console.log('masuk ke dalam timestampthreemonthlist');
 }

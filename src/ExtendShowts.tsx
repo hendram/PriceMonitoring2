@@ -19,10 +19,24 @@ const b = useContext(MainContext2);
 // dataextend will be use to show or hide menu before closingmenu
 useEffect(() => {
 if(dataextend && (dataextend !== "")){
-      let newextendtsdiv = extendtsdiv;
-        newextendtsdiv = {vis: "extendtsdivsh"};
+      let  newextendtsdiv = {vis: "extendtsdivsh"};
     setExtendtsdiv(newextendtsdiv);
-}}, [dataextend] );
+}
+else {
+    let newextendtsdiv = {vis: "extendtsdivhid"};
+    setExtendtsdiv(newextendtsdiv);
+
+     let newshextsdiv = shextsdiv;
+       if(newshextsdiv.vis === "shextsdivsh"){
+        newshextsdiv = ({vis: "shextsdivhid" });
+          }
+       setShextsdiv(newshextsdiv);
+
+  showcurrent(id, "musthide");
+
+    
+}
+}, [dataextend] );
 
 const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();

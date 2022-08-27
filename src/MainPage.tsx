@@ -147,17 +147,32 @@ const showagaintrans = (id: number) => {
     console.log('inside showagaintrans neh');
 }
 
-const showaddmenu = () => {
+const showaddmenu = (hasempty: string) => {
+ if(hasempty === "false"){
   if(walletbutton.connecteddiv === "connectedhiddiv"){
-     let newwalletbutton = walletbutton;
-        newwalletbutton = {connectdiv: "connecthiddiv", transferdiv: "transferhiddiv", 
+      let newwalletbutton = {connectdiv: "connecthiddiv", transferdiv: "transferhiddiv", 
 connecteddiv: "connectedshdiv"}
        setWalletbutton(newwalletbutton);
 }
   if(addmenu.vis === "addmenuhid"){
-   let newaddmenu = addmenu;
-    newaddmenu = {vis: "addmenush"};
+   let newaddmenu = {vis: "addmenush"};
     setAddmenu(newaddmenu);
+}
+}
+  else {
+  if(walletbutton.connecteddiv === "connectedshdiv"){
+      let newwalletbutton = {connectdiv: "connectshdiv", transferdiv: "transferhiddiv", 
+connecteddiv: "connectedhiddiv"}
+       setWalletbutton(newwalletbutton);
+}
+  if(addmenu.vis === "addmenush"){
+   let newaddmenu = {vis: "addmenuhid"};
+    setAddmenu(newaddmenu);
+}    
+ if(transferpage.vis === "transferpagesh"){
+    let newtransferpage = {vis: "transferpagehid"};
+     setTransferpage(newtransferpage);
+}
 }
 }
 
@@ -328,8 +343,11 @@ onClick={(e) => handleTransfer(e)} > Transfer </button>
 </div>
 <div className={addmenu.vis} >
 <button className="buttonmenu" onClick={(e) => handleClickbm(e)} >&#926;</button>
+<div className={addts.vis}   style={{top: addsubdiv, right: '0px'}}>
+<button className="buttonaddsub" onClick={(e) => handleClickats(e)} >Add Subscription</button>
+</div>    {/* div addts inside addmenu because only have 1 parent */}
 </div>
-</div>    
+</div>    {/* end of banner div */}
 
 <div className={monitorviewdiv.togglemon} >
 <MonitorView />
@@ -359,9 +377,6 @@ accountpass={accountkeep.current}
 closingtrans={closetrans} />
  </div>
 
-<div className={addts.vis}   style={{top: addsubdiv, right: '0px'}}>
-<button className="buttonaddsub" onClick={(e) => handleClickats(e)} >Add Subscription</button>
-</div>
 
 </>
 )

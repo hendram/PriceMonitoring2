@@ -25,7 +25,8 @@
   justify-content: center;
   gap: 0%;
   align-self: flex-end;
-  border: 1px solid red;
+  border-radius: 5px;
+  background-color: blue;
 }
 
 .shextsdivhid {
@@ -35,7 +36,6 @@ display: none;
 .extendtsdiv {
 display: block;
 width: fit-content;
-border: 1px solid black;
 }
 
 .extendtsbutton {
@@ -49,7 +49,6 @@ border: 1px solid black;
 .showtsdiv {
  display: block;
  width: fit-content;
- border: 1px solid black;
 }
 
 .showtsbutton {
