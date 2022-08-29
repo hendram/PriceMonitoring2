@@ -283,7 +283,7 @@ if(d && (typeof d === "object")){
 
 
 if(c && (typeof c === "object")){
-     if(threemonthlist.length !== 0){
+     if((threemonthlist.length !== 0) || (allpricetime.current.length === 0)){
      c.showaddmenu("false");
 }
     else {

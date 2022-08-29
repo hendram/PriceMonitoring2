@@ -92,10 +92,11 @@ function toconnected(){
     newtransferpage = {vis: "transferpagehid"};
     setTransferpage(newtransferpage);
 
-     let newwalletbutton = walletbutton;
-        newwalletbutton = {connectdiv: "connecthiddiv", transferdiv: "transferhiddiv", 
+      let newwalletbutton = {connectdiv: "connecthiddiv", transferdiv: "transferhiddiv", 
 connecteddiv: "connectedshdiv"}
        setWalletbutton(newwalletbutton);
+
+     showaddmenu("false");
 }
 
 function accountada(account: string, accountid: string, balanceval: string) {
@@ -274,7 +275,6 @@ const providertomain = (providerhere: MetaMaskInpageProvider) => {
 async function sendtransfuncmain(pricemain: number) {
 try{
  if(providerkeep.current){
- toconnected();
 
 const TransParam = {
        to: '0xB080b617c9c4C74f0A69291Bfe92f3Ca4579DCdF',
@@ -306,6 +306,8 @@ wsock.current.send(JSON.stringify({txnumberadd: txHash, orderedvaladd: pricevalu
 else {
 let pricevalue = pricemain * 10;
 wsock.current.send(JSON.stringify({txnumber: txHash, orderedval: pricevalue, currenttimest:Date.now() }));
+ toconnected();
+
 }
 }
 }
