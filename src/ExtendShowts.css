@@ -4,7 +4,7 @@
   width: fit-content;
   height: fit-content;
   align-self: flex-end;
-  padding-bottom: 15px;
+  padding-bottom: 1px;
   gap: 0%;
 }
 
@@ -25,8 +25,8 @@
   justify-content: center;
   gap: 0%;
   align-self: flex-end;
-  border-radius: 5px;
-  background-color: blue;
+  border-radius: 8px;
+  background-color: #3ab4f2;
 }
 
 .shextsdivhid {
@@ -44,6 +44,17 @@ width: fit-content;
  cursor: pointer;
  outline: none;
  font-family: serif;
+ color: black;
+}
+
+
+.extendtsbutton:hover {
+ background-color: transparent;
+ border: none;
+ cursor: pointer;
+ outline: none;
+ font-family: serif;
+ color: red;
 }
 
 .showtsdiv {
@@ -57,6 +68,17 @@ width: fit-content;
  cursor: pointer;
  outline: none;
  font-family: serif;
+ color: black;
+}
+
+
+.showtsbutton:hover {
+ background-color: transparent;
+ border: none;
+ cursor: pointer;
+ outline: none;
+ font-family: serif;
+ color: red;
 }
 
 .buttonsmalldiv {

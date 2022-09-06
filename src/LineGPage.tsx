@@ -5,6 +5,7 @@ import { MainContext1 } from './MainPage'
 import { MainContext3 } from './MainPage'
 import { MainContext4 } from  './MainPage'
 import ExtendShowts from './ExtendShowts'
+import Emitter from './Emitter';
 
 type Pricetime = {
  x: string;
@@ -69,6 +70,7 @@ ReactElement => {
 const allpricetime = useRef<Array<AllPricein>>([]);
 const tnum = useRef<number>(NaN);
 const showcur = useRef<Array<Currentts>>([]);
+
 
 // Using type assertion for empty object {} as type or <type>{}
 let listdatain: Listdatain | null  = null;
@@ -196,8 +198,9 @@ rerenderlchart();
 
 console.log("panjang lchartdata "+ lchartdata.length);
 
-          websock.onmessage = (e) => {
-             console.log(JSON.parse(e.data));
+
+const receivingmes = (e: any) => {
+             console.log('inside receivingmes');
          if(JSON.parse(e.data).price && JSON.parse(e.data).time){
   let splitresult = JSON.parse(e.data).price.split(' ');
              console.log(splitresult[4]);
@@ -208,15 +211,17 @@ console.log("panjang lchartdata "+ lchartdata.length);
          {
                 if(allpricetime.current[v].pricetime.length < 6){
                         let k = splitresult[0];
-                        let l = JSON.parse(e.data).time;
+                        let d = new Date(JSON.parse(e.data).time);
+                        let l = d.getHours() + " :" + d.getMinutes() + " :" + d.getSeconds();
                       let z = {x: k, y: l};
                    allpricetime.current[v].pricetime.push(z);
             break;
         }
              else {
                    let k = splitresult[0];
-                        let l = JSON.parse(e.data).time;
-                      let z = {x: k, y: l};
+                   let d = new Date(JSON.parse(e.data).time);
+             let l = d.getHours() + " :" + d.getMinutes() + " :" + d.getSeconds();
+                   let z = {x: k, y: l};
                    allpricetime.current[v].pricetime.splice(0, 1);
                   allpricetime.current[v].pricetime.push(z);
           break;
@@ -233,11 +238,24 @@ JSON.parse(e.data).balanceval);
 }
       else if(JSON.parse(e.data).goarrlist) {
      let goarrlistlgp = JSON.parse(e.data).goarrlist;    
- allpricetime.current.length = 0;
-  widhehold.current.length = 0;
-  divlchart.current.length = 0;
+
+if(allpricetime.current.length !== 0){
+    allpricetime.current.length = 0;
+}
+if(showcur.current.length !== 0) {
+     showcur.current.length = 0;
+}
+if(widhehold.current.length !== 0){
+     widhehold.current.length = 0;
+}
+if(divlchart.current.length !== 0){
+      divlchart.current.length = 0;
+}
+
+rerenderlchart();
               
     for(let w = 0; w < goarrlistlgp.length; w++){
+
       let newpricetime = {chain: goarrlistlgp[w].chain, dex: goarrlistlgp[w].dex,
 pricetime:[], tokenname: goarrlistlgp[w].tokenname, 
 tokenanchor: goarrlistlgp[w].tokenanchor,
@@ -297,6 +315,11 @@ if(c && (typeof c === "object")){
 
 };
 
+const numberlist = Emitter.listenerCount('messagews', receivingmes);
+if(numberlist < 1){
+
+        Emitter.on('messagews', receivingmes);
+}
 
 // using useRef in this function, cause useState cannot rerender at all
 const widhesetlp = (idnya: number, widthnya: number, heightnya: number) => {

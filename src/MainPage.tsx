@@ -8,6 +8,7 @@ import topimage from './images/topimage.png';
 import './MainPage.css';
 import { MetaMaskInpageProvider } from '@metamask/providers';
 import {ethers} from 'ethers';
+import Emitter from './Emitter';
 
 interface AppContext1  {
 accountada: Function;
@@ -39,12 +40,12 @@ const MainPage = () => {
 
 // using useRef for Websocket singleton will makes more controllabel and
 // predictable when new instance need it
-const wsock = useRef<WebSocket>(Singletonws.getInstance());
 
 const [walletconn, setWalletconn] = useState({vis: "walletconnhid"});
 const [transferpage, setTransferpage] = useState({vis: "transferpagehid"});
 const [addmenu, setAddmenu] = useState({vis: "addmenuhid"});
 const [addts, setAddts] = useState({vis: "addtshid"});
+const wsock = useRef<WebSocket>(Singletonws.getInstance());
 
 const [graphicsviewdiv, setGraphicsviewdiv] = useState({
 togglegv: "graphicsviewhid", yesno: "no", formember: "no"});
@@ -55,9 +56,8 @@ connectdiv: "connectshdiv", transferdiv: "transferhiddiv", connecteddiv: "connec
 const accountkeep = useRef<string>("");
 const balancekeep = useRef<string>("");
 const providerkeep = useRef<MetaMaskInpageProvider | null>(null);
-const topdiv = useRef<HTMLDivElement>(null);
-const bannerdiv = useRef<HTMLDivElement>(null);
-const [addsubdiv, setAddsubdiv]  = useState<string>("");
+// const tobannerdiv = useRef<HTMLButtonElement>(null);
+// const [bannerdivh, setBannerdivh] = useState<string>();
 const coming = useRef<comingobject>({from: "", id: NaN});
 
 //const ethereum = window.ethereum as MetaMaskInpageProvider;
@@ -66,8 +66,13 @@ const coming = useRef<comingobject>({from: "", id: NaN});
 }
 
 window.addEventListener('unload', function(event){
-          wsock.current.onclose = () => { } 
-   });
+          Singletonws.removeInstance();
+   //       wsock.current.send(JSON.stringify({closedeh: "yes"}));
+            wsock.current.close();  
+
+// don't use onclose, that for executing something after receiving
+// close event from server 
+  });
 
  
 const addginit = (initval: string) => {
@@ -88,10 +93,7 @@ const tutup = (val: string) => {
 }
 
 function toconnected(){
-        let newtransferpage = transferpage;
-    newtransferpage = {vis: "transferpagehid"};
-    setTransferpage(newtransferpage);
-
+ 
       let newwalletbutton = {connectdiv: "connecthiddiv", transferdiv: "transferhiddiv", 
 connecteddiv: "connectedshdiv"}
        setWalletbutton(newwalletbutton);
@@ -105,6 +107,7 @@ function accountada(account: string, accountid: string, balanceval: string) {
    if(account === "true"){
   // tutup function is for closing wallet dialog page   
    tutup("true");
+   showaddmenu("false"); 
      }
 
   else if(account === "false"){
@@ -123,20 +126,17 @@ connecteddiv: "connectedhiddiv"}
 }
 }
 
+/*
 useEffect(() => {
-     if((topdiv.current !== null) && (bannerdiv.current !== null)){
-     let newaddsubdiv = addsubdiv;
-         newaddsubdiv = (topdiv.current.clientHeight + 
-bannerdiv.current.clientHeight).toString() + 'px';
-         
-     setAddsubdiv(newaddsubdiv);
+     if (tobannerdiv.current !== null){
+    
+  let newbannerdivh = tobannerdiv.current.clientHeight.toString() + 'px';
+     setBannerdivh(newbannerdivh);    
 
-console.log('topdiv ne' + topdiv.current.clientHeight);
-console.log('bannerdiv ne' + bannerdiv.current.clientHeight);
+console.log('bannerdiv ne' + tobannerdiv.current.clientHeight);
 
-}}, [bannerdiv]);
-
-console.log('addsubdiv ne' + addsubdiv);
+}}, [tobannerdiv]);
+*/
 
 const showagaintrans = (id: number) => {
    let newtransferpage = transferpage;
@@ -199,6 +199,11 @@ const closetrans = (val: string) => {
         }
 }
 
+ wsock.current.onmessage = (e) => {
+           console.log(JSON.parse(e.data));
+          Emitter.emit('messagews', e);
+}
+
 const handleConnect = (event: React.MouseEvent<HTMLButtonElement>) => {
    event.preventDefault();
    let newwalletconn = walletconn;
@@ -243,8 +248,8 @@ const handleClickgv = (event: React.MouseEvent<HTMLSpanElement>) => {
        event.preventDefault();
 
        if(graphicsviewdiv.togglegv === "graphicsviewhid"){
-     let newgraphicsviewdiv = {togglegv: "graphicsviewsh", yesno: "no", 
-formember: "no"};
+     let newgraphicsviewdiv = {togglegv: "graphicsviewsh", yesno: graphicsviewdiv.yesno, 
+formember: graphicsviewdiv.formember};
             setGraphicsviewdiv(newgraphicsviewdiv);
  let newmonitorviewdiv = {togglemon: "monitorviewhid"};   
     setMonitorviewdiv(newmonitorviewdiv);
@@ -263,13 +268,20 @@ const handleClickmon = (event: React.MouseEvent<HTMLSpanElement>) => {
     let newmonitorviewdiv = {togglemon: "monitorviewsh"};   
     setMonitorviewdiv(newmonitorviewdiv);
 
- let newgraphicsviewdiv = {togglegv: "graphicsviewhid", yesno: "no", formember: "no"};
+ let newgraphicsviewdiv = {togglegv: "graphicsviewhid", yesno: graphicsviewdiv.yesno, 
+    formember: graphicsviewdiv.formember};
             setGraphicsviewdiv(newgraphicsviewdiv);
          }
      
 const providertomain = (providerhere: MetaMaskInpageProvider) => {
        
        providerkeep.current = providerhere;
+  let newtransferpage = {vis: "transferpagesh"};
+    setTransferpage(newtransferpage);
+      let newwalletbutton = {connectdiv: "connecthiddiv", transferdiv: "transfershdiv", 
+connecteddiv: "connectedhiddiv"}
+       setWalletbutton(newwalletbutton); 
+      
 }      
 
 async function sendtransfuncmain(pricemain: number) {
@@ -292,7 +304,10 @@ console.log('isi dari coming current sialan' + JSON.stringify(coming.current));
 if(txHash){ 
 if(coming.current.from === "extendsub"){
 let pricevalue = pricemain * 10;
-wsock.current.send(JSON.stringify({txnumberextend: txHash, idgraph: coming.current.id, extendorder: pricevalue }));
+if(wsock.current.readyState === 1){
+wsock.current.send(JSON.stringify({txnumberextend: txHash, idgraph: coming.current.id, 
+extendorder: pricevalue }));
+}
  coming.current = { from: "", id: NaN }
 
 console.log('inside extendsub sialan');
@@ -300,12 +315,16 @@ console.log('inside extendsub sialan');
 else if(coming.current.from === "addsub"){
 
 let pricevalue = pricemain * 10;
-wsock.current.send(JSON.stringify({txnumberadd: txHash, orderedvaladd: pricevalue, currenttimestadd:Date.now() }));
+if(wsock.current.readyState === 1){
+wsock.current.send(JSON.stringify({txnumberadd: txHash, orderedvaladd: pricevalue }));
+}
  coming.current = { from: "", id: NaN }
 }
 else {
 let pricevalue = pricemain * 10;
-wsock.current.send(JSON.stringify({txnumber: txHash, orderedval: pricevalue, currenttimest:Date.now() }));
+if(wsock.current.readyState === 1){
+wsock.current.send(JSON.stringify({txnumber: txHash, orderedval: pricevalue }));
+}
  toconnected();
 
 }
@@ -321,16 +340,25 @@ catch(error) {
 
 return(
 <>
-<div className="topimagediv" ref={topdiv}>
+<div className="topimagediv" >
 <img src={topimage} className="topimageimg"></img>
 </div>
-<div className="bannerdiv" ref={bannerdiv}>
+<div className="bannerdiv" >
 <div className="monitoringdiv">
 <span onClick={(e) => handleClickmon(e)} className="monitoring">Monitoring
 </span>
 </div>
 <div className="addgraphdiv">
-<span onClick={(e) => handleClickgv(e)} className="addgraph">Add Graph</span>
+<button onMouseEnter={(e) => handleEnterg(e)} className="addgraph">Add Graph</button>
+<div className="addgraphtokendex">
+<span onClick={(e) => handleClickgv(e)} className="addgraph">Add Token DEX Graph</span>
+</div>
+</div>
+<div className="viewgraphdiv">
+<button onMouseEnter={(e) => handleEnterv(e)} className="addgraph">View Graph</button>
+<div className="viewgraphtokendex">
+<span onClick={(e) => handleClickvg(e)} className="addgraph">View Token DEX Graph</span>
+</div>
 </div>
 <div className={walletbutton.connectdiv}>
 <button className="buttonconnect"
@@ -345,7 +373,7 @@ onClick={(e) => handleTransfer(e)} > Transfer </button>
 </div>
 <div className={addmenu.vis} >
 <button className="buttonmenu" onClick={(e) => handleClickbm(e)} >&#926;</button>
-<div className={addts.vis}   style={{top: addsubdiv, right: '0px'}}>
+<div className={addts.vis}   style={{right: '0px'}}>
 <button className="buttonaddsub" onClick={(e) => handleClickats(e)} >Add Subscription</button>
 </div>    {/* div addts inside addmenu because only have 1 parent */}
 </div>
