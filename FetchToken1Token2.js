@@ -5,6 +5,7 @@ class FetchToken1Token2 {
 
 resultfromnode = "";
 graphdataformat = [];
+ws = "";
 
 constructor(chain, dex, tokenname1, tokenname2, tokenadd1, tokenadd2, digit1, 
 digit2, single){
@@ -19,7 +20,8 @@ digit2, single){
     this.single = single;
 }
 
-runfuncswap = () => {
+runfuncswap = (ws) => {
+this.ws = ws;
 try{
       this.fetchtok1tok2(this.chain, this.dex, this.tokenname1, 
 this.tokenname2, this.tokenadd1,
@@ -30,14 +32,15 @@ console.error(error)
 }};
 
 graphfunc(resultfromnodein) {
-           const timenow = new Date();
+           console.log('inside graphfunc');
+           const timenow = new Date().getTime();
            this.graphdataformat.push(resultfromnodein);
-            let hours = timenow.getHours();
-            let minutes = timenow.getMinutes();
-            let seconds = timenow.getSeconds();
-            let combhm = hours + ":" + minutes + ":" + seconds;
-            this.graphdataformat.push(combhm);
-            this.single.emit('sendgraph', this.graphdataformat);
+            this.graphdataformat.push(timenow);
+            let graphsend = {"price": this.graphdataformat[0], 
+"time": this.graphdataformat[1]};
+
+      this.ws.send(JSON.stringify(graphsend));
+//            this.single.emit('sendgraph', this.graphdataformat);
             }
 
 fetchtok1tok2 = async (chain, dex, tokenname1, tokenname2,tokenadd1, tokenadd2, 
@@ -45,7 +48,7 @@ digit1, digit2) => {
 
 try{
 let token1token2 = undefined;
-console.log("chain" + chain);
+console.log("inside fetchtok1tok2 FetchToken1Token2");
 console.log("dex" + dex);
 
 

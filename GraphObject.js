@@ -6,6 +6,7 @@ const single = singleton.getInstance();
 class GraphObject {
 innow = "";
  setrun = "";
+ws = "";
 
    constructor(chain, dex, pricein, tokenname1, tokenaddress1, digittoken1, tokenname2, 
 tokenaddress2, digittoken2, milisecondselapse, currentts, ntimes, threemonthstamp){
@@ -24,8 +25,9 @@ this.ntimes = ntimes;
 this.threemonthstamp = threemonthstamp;
 }
 
-rungraphobj() {
+rungraphobj(ws) {
   let itself = this;
+  itself.ws = ws;
 // Bind will bind this function inside setInterval to object itself, not spawn into their own context
 this.setrun = setInterval(itself.runningnow.bind(this), itself.milisecondselapse);
 
@@ -33,20 +35,30 @@ console.log(this.setrun);
 
 }
 
-runningnow(){
- if(this.threemonthstamp !== ""){
-   let timenow = new Date();
-  if(this.threemonthstamp <= timenow){
+stopnow(){
+  clearInterval(this.setrun);
+}
+
+threemonthstampchk(tms){
+ if(tms !== ""){
+   let timenow = new Date().getTime();
+  if(tms <= timenow){
    console.log('inside threemonthstamp outdated');
-    single.emit('removethists', "true", this.chain, this.dex, this.tokenname2, this.tokenname1,
+    single.emit('removethists', this.chain, this.dex, this.tokenname2, this.tokenname1,
     this.pricein);
   } 
 }
+
+}
+
+runningnow(){
+     this.threemonthstampchk(this.threemonthstamp);
+
           this.innow = new FetchToken1Token2(this.chain,
 this.dex, this.tokenname1, this.tokenname2, 
 this.tokenaddress1, this.tokenaddress2, this.digittoken1, 
 this.digittoken2, single);
-   this.innow.runfuncswap();
+   this.innow.runfuncswap(this.ws);
 
 }
 

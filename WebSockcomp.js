@@ -10,6 +10,9 @@ const updateaccountdb = require('./UpdateAccountdb');
 const updategoarrdb = require('./UpdateGoarrdb');
 const removeallgoarr = require('./RemoveAllGoarr');
 const checktimestampdb = require('./CheckTimestampdb');
+const singleton = require('./Singleton');
+const single = singleton.getInstance();
+
 
 class WebSockcomp {
  newmessage = "";
@@ -30,33 +33,39 @@ resultcounting = NaN;
 goarrstamp = 0;
 justindel = "no";
 deletedgoarr = [];
+// closing = "";
 
 constructor(){
   this.counter = ++WebSockcomp.counterwsc ;
 };
 
-
-closeall(){
-for(let x = 0; x < this.goarr.length; x++){
-   this.goarr[x] = "";
+stopinterval(){
+ console.log('inside stopinterval');
+  for(let c = 0; c < this.goarr.length; c++){
+    this.goarr[c].stopnow();
 }
-// Even if this detected here and can be access, but Object.getPrototypeOf still return empty
-    console.log(this.counter);
-// Timeout object return from setInterval has been assign to each wsc objects because wsc only created when new connection happen, through refresh, reconnect
-// browser
-    console.log('setrun' + this.setrun);
-    clearInterval(this.setrun);
+for(let x = 0; x < this.goarr.length; x++){
+   this.goarr[x] = null;
+}
     if(this.deadoralive === "alive"){
       this.deadoralive = "dead";
+   
 }
-console.log(this.deadoralive);
+// Even if this detected here and can be access, but Object.getPrototypeOf still 
+// return empty for setTimeout
+
+// Timeout object return from setInterval has been assign to each wsc objects because wsc 
+// only created when new connection happen, through refresh, reconnect
+// browser
+
 }
 
 ping(ws) {
       let pingthis = this;
    if(this.deadoralive === "dead"){
-     clearTimeout(this.timeoutId);
      clearTimeout(pingthis.longertime);
+      clearTimeout(this.timeoutId);
+     return "true";
     }
 else{
 
@@ -74,7 +83,7 @@ if(this.pongcount < 1){
              if(pingthis.longertime){
              clearTimeout(pingthis.longertime);
                 }
-             pingthis.longertime = setTimeout(function(){ pingthis.closeall() }, 30000);
+             pingthis.longertime = setTimeout(function(){ pingthis.stopinterval() }, 30000);
 }); 
 }
 
@@ -87,6 +96,7 @@ async removetimestamp(argrem){
 try {
  let indexforts = NaN;
  let resgoarr = await checkgoarrdb.checkgoarraccount(this.accountid);
+    console.log('isi dari resgoarr removetimestamp' + resgoarr.length);
      if(resgoarr){
 // resgoarr just to get on which index in goarr db this expired timestamp reside
 console.log('inside removetimestamp');
@@ -102,8 +112,12 @@ console.log('inside removetimestamp');
 }
 this.goarr[indexforts].threemonthstamp = "";
 let safetygoarr = this.goarr[indexforts];
+// do recycletoback 
 this.goarr.push(safetygoarr);
+this.goarr[indexforts].stopnow();
 this.goarr.splice(indexforts, 1);
+// deletegoarr array will be send to client to mark which timestamp on 
+// allpricetime.current array need to be remove 
 this.deletedgoarr.push(indexforts);
 
  let resultaddress = await checktimestampdb.checkdbtimestamp(this.accountid); 
@@ -123,8 +137,13 @@ catch(error){
 
 }
 
-async populategraph(){
+async populategraph(ws){
 try{
+   for(let b = 0; b < this.goarr.length; b++){
+        this.goarr[b].stopnow();
+        this.goarr[b] = null;
+}
+
   this.goarr.length = 0;
  let resultgoarr = await checkgoarrdb.checkgoarraccount(this.accountid);
    if(resultgoarr){
@@ -147,12 +166,7 @@ resultgoarr[u].stampthreemonth
 
 this.goarr.push(goinst);
 
-goinst.rungraphobj();
-/*
-this.goarr.push({chain: resultgoarr[u].chainname, dex: resultgoarr[u].dexname, pricein: resultgoarr[u].priceinnow, tokenname1: resultgoarr[u].tokenname1tok,
-tokenaddress1: resultgoarr[u].tokenaddress1addr, digittoken1: resultgoarr[u].digittoken1num, tokenname2: resultgoarr[u].tokenname2tok, 
-tokenaddress2: resultgoarr[u].tokenaddress2addr, digittoken2: resultgoarr[u].digittoken2num, milisecondselapse: resultgoarr[u].milisecondselapsetime,
-currentts: resultgoarr[u].currenttstime, ntimes: resultgoarr[u].ntimestime, threemonthstamp: resultgoarr[u].stampthreemonth}); */
+goinst.rungraphobj(ws);
            }     
 }
 }
@@ -170,8 +184,8 @@ try{
 
   let arraystamp =  resultaddr.stampthreemonth;
      let threemonthnow =  arraystamp[argtot.idgraph];         
-//     let threemonthnownew = threemonthnow + (argtot.extendorder * 90 * 24 * 3600 * 1000);
-     let threemonthnownew = threemonthnow + (argtot.extendorder * 60 * 1000);
+     let threemonthnownew = threemonthnow + (argtot.extendorder * 90 * 24 * 3600 * 1000);
+ //    let threemonthnownew = threemonthnow + (argtot.extendorder * 300 * 1000);
 
     arraystamp.splice(argtot.idgraph, 1);
          arraystamp.push(threemonthnownew);
@@ -193,8 +207,8 @@ if(resultaddr !== "notfind"){
    arraystamp =  resultaddr.stampthreemonth;
 }
 if(arraystamp.length !== 0){
-// let timeafterthreemonth = arg1.currenttimestadd + ( 90 * 24 * 3600 * 1000 );  
- let timeafterthreemonth = arg1.currenttimestadd + ( 60 * 1000 );  
+ let timeafterthreemonth = new Date().getTime() + ( 90 * 24 * 3600 * 1000 );  
+// let timeafterthreemonth = new Date().getTime() + ( 300 * 1000 );  
    let resultcounting = arg1.orderedvaladd;
    console.log('hasil result counting' + resultcounting);
     console.log('hasil dari timeafterthreemonth' + timeafterthreemonth);
@@ -216,8 +230,8 @@ catch(error){
 async txnumberbegin(arg1){
 try{ 
 
-// let timeafterthreemonth = arg1.currenttimest + ( 90 * 24 * 3600 * 1000 );  
- let timeafterthreemonth = arg1.currenttimest + ( 60 * 1000 );  
+ let timeafterthreemonth = new Date().getTime() + ( 90 * 24 * 3600 * 1000 );  
+// let timeafterthreemonth = new Date().getTime() + ( 300 * 1000 );  
 
    let resultcounting = arg1.orderedval;
    console.log('hasil result counting' + resultcounting);
@@ -230,6 +244,7 @@ try{
   const resultins = await insertaccountdb.insertdbaccount(this.accountid, forstampthreem)
    if(resultins === "1inserted"){
    console.log('isi dari resultcounting' + resultcounting);
+   this.accountexist = "true";
     await this.refilltimestamp();
 }
 }
@@ -278,7 +293,7 @@ console.log(error);
 async refilltimestamp(){
 try{
  let resultaddr = await checktimestampdb.checkdbtimestamp(this.accountid);
-  console.log('isi dari resultaddr' + resultaddr);
+  console.log('isi dari resultaddr inside refilltimestamp' + resultaddr);
   let arraystamp =  resultaddr.stampthreemonth;
 
 
@@ -291,12 +306,13 @@ try{
 
 // add goarr data into database again from goarr array here and updating go threemonthstamp properties
 // if x or y has finish, then loop will stop which one first
+        console.log('length of goarr' + this.goarr.length);
 
    for(let x = 0, y = 0; x < arraystamp.length, y < this.goarr.length; x++, y++){
       if((this.goarr[y] === undefined) || (arraystamp[x] === undefined)){
         break;
 }
-    console.log('inside resultcount' + this.goarr[y].tokenname1);
+    console.log('inside refilltimestamp' + this.goarr[y].threemonthstamp);
   await insertgoarrdb.insertgoarraccount(this.accountid, this.goarr[y].chain, 
 this.goarr[y].dex, 
 this.goarr[y].pricein,
@@ -314,7 +330,6 @@ arraystamp[x]);
 this.goarr[y].threemonthstamp = arraystamp[x];
 }
 
-this.accountexist = "true";
 this.justindel = "yes";
 }
 catch(error){
@@ -324,7 +339,8 @@ console.log(error);
 
 
 async checkaccountexist(){
-try { let resultaddr = await checkaccountdb.checkdbaccount(this.accountid).catch(console.dir);
+try { 
+let resultaddr = await checkaccountdb.checkdbaccount(this.accountid);
 console.log('nilain dari resultaddr' + resultaddr);
  if(resultaddr === "find") {
    this.accountexist="true";
@@ -345,7 +361,7 @@ async checkbeforeinsertaccdb(){
 }
 
 
-async processmess(messagenya){
+async processmess(messagenya, ws){
     this.newmessage = messagenya
        this.barumessage = JSON.parse(this.newmessage);
 console.log('isi dari barumessage neh' + JSON.stringify(this.barumessage));
@@ -370,14 +386,15 @@ if(this.barumessage.txnumber){
 if(this.barumessage.txnumberadd){
     await this.txnumberbeginadd(this.barumessage);
 }
+
+if(this.barumessage.threemonthstampexpone){
+     await this.removetimestamp(this.barumessage.threemonthstampexpone);
+}
  
 if(this.barumessage.deleteone){
    let bdo = this.barumessage.deleteone;
-     let goarrdel = NaN;
-if(bdo.delme){
-     await this.removetimestamp(bdo);
-}
-else{
+ 
+    let goarrdel = NaN;
     console.log('masuk neh barumessage deleteone' + this.barumessage.deleteone);
      for(let w = 0; w < this.goarr.length; w++){
         if((this.goarr[w].chain === bdo.chain) &&
@@ -385,10 +402,12 @@ else{
      (this.goarr[w].tokenname2 === bdo.tokenname) &&
     (this.goarr[w].tokenname1 === bdo.tokenanchor) &&
     (this.goarr[w].pricein === bdo.pricein)){
-       this.goarr[w] = "";
+     this.goarr[w].stopnow();
+       this.goarr[w] = null;
      goarrdel = w;
- }
+} 
 }
+
 this.goarr.splice(goarrdel, 1);
 
 
@@ -397,9 +416,12 @@ if(this.accountexist === "true"){
 }
 
 }
-}  
-
- 
+  
+/*
+if(this.barumessage.closedeh){
+     this.closing = "yes";
+}
+*/ 
 if(this.barumessage.datanya){
     let dsh = this.barumessage.datanya;
 
@@ -420,12 +442,13 @@ dsh.threemonthstamp
 );
 
 this.goarr.push(goinst);
+console.log('inside barumessage datanya');
 
 if(this.accountexist === "true"){
    await this.refilltimestamp();
 }
 
-goinst.rungraphobj();
+goinst.rungraphobj(ws);
 
 
 }

@@ -20,16 +20,21 @@ getInstance(servernow){
 }
 
 
+
  onnya(objectb) {
      let thisbound = this;
 objectb.on("connection", function(ws){
   // Cannot use this inside event listener, because this will point to event listener object
+
    let self = new wsc;
    Fetchdata.selfstorage.push(self);
-   //Every new connection will trigger this deadoralive checking
+   //Every new connection will trigger this deadoralive checking for dead ping 
+   // giving more time to derefrence self disconnected cause of no answer to ping so ping func can run
        for(let y = 0; y < Fetchdata.selfstorage.length; y++){
+           console.log('isi dari Fetchdata.selfstorage' + Fetchdata.selfstorage.length);
       if(Fetchdata.selfstorage[y].deadoralive === "dead"){
-            Fetchdata.selfstorage[y] = "";
+            console.log('inside Fetchdata deadoralive is dead');
+            Fetchdata.selfstorage[y] = null;
              Fetchdata.keepindex.push(y);
        }
     }
@@ -38,23 +43,28 @@ objectb.on("connection", function(ws){
 }
   Fetchdata.keepindex.length = 0;     
 
-  console.log(self.counter);   
+
    self.ping(ws);
 
-ws.on('close', function() {
-    self = "";
+ws.on("close", function() {
+  console.log('inside ws onclose');
+   self.stopinterval();   
+   self.deadoralive = "dead"
+   self = null;
+   ws.close();
 });
+
 
 ws.on("message", function(message){ 
 // Instance of wrap object should not be going inside instance of wrapped object, if not
 // then instance of wrapped object cannot be detach                
-        self.processmess(message.toString()).then(() => {
+        self.processmess(message.toString(), ws).then(() => {
 
       if(self.accountmess === "yes"){
                self.checkaccountexist().then(() => {
              console.log('dalam accountmess');
             if(self.accountexist === "true" && self.justindel === "no"){
-         self.populategraph().then(() => {
+         self.populategraph(ws).then(() => {
              let goarrforsend = [];
 
               for(let h = 0; h < self.goarr.length; h++){
@@ -63,7 +73,9 @@ ws.on("message", function(message){
  pricein: self.goarr[h].pricein, threemonthstamp: self.goarr[h].threemonthstamp})
 }
     ws.send(JSON.stringify({account: "true", accountid: self.accountid, balanceval: self.balanceval}));
-          ws.send(JSON.stringify({goarrlist: goarrforsend}));
+   if(goarrforsend.length !== 0){       
+   ws.send(JSON.stringify({goarrlist: goarrforsend}));
+}
     });
    }
           else if(self.accountexist === "true" && self.justindel === "yes"){
@@ -84,10 +96,10 @@ ws.on("message", function(message){
 }
 });  // self.processmess closing
 
-thisbound.removefunc = (arg0, arg1, arg2, arg3, arg4, arg5) => {
-   let messagenya = {deleteone: {delme: arg0, chain: arg1, dex: arg2, tokenname2: arg3, tokenname1: arg4,
+thisbound.removefunc = (arg1, arg2, arg3, arg4, arg5) => {
+   let messagenya = {threemonthstampexpone: {chain: arg1, dex: arg2, tokenname2: arg3, tokenname1: arg4,
      pricein: arg5}}; 
-    self.processmess(JSON.stringify(messagenya)).then(() => {
+    self.processmess(JSON.stringify(messagenya), ws).then(() => {
                 let threemonthstamparr = []; 
               for(let z = 0; z < self.goarr.length; z++){
                    if(self.goarr[z].threemonthstamp){
@@ -107,21 +119,6 @@ single.on('removethists', thisbound.removefunc);
 }
 
  }); //ws.onmessage closing 
-
-
-thisbound.graphaccept = (arg) => {
-let graphsend = {"price": arg[0], 
-"time": arg[1]};
-ws.send(JSON.stringify(graphsend));
-}
-
-thisbound.countgraphsingle = single.listenerCount('sendgraph', 
-thisbound.graphaccept);
-if(thisbound.countgraphsingle < 1){
-  
-single.on('sendgraph', thisbound.graphaccept);
-}
-
 
  })
 }

@@ -12,10 +12,10 @@ try {
     // Query for a movie that has the title 'Back to the Future'
     const query = { accountaddress: accountaddr };
     const exist = await custdata.findOne(query, {accountaddress: 1, _id: 0});
-    if(exist  == null ){
+    if(exist === null ){
       return "notfind";
     }       
-    else if((exist != null) && (query.accountaddress === exist.accountaddress)) {
+    else if((exist !== null) && (query.accountaddress === exist.accountaddress)) {
             return "find";
 }
 }
