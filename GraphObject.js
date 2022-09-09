@@ -51,15 +51,26 @@ threemonthstampchk(tms){
 
 }
 
-runningnow(){
+async runningnow(){
+try{
      this.threemonthstampchk(this.threemonthstamp);
 
           this.innow = new FetchToken1Token2(this.chain,
 this.dex, this.tokenname1, this.tokenname2, 
 this.tokenaddress1, this.tokenaddress2, this.digittoken1, 
 this.digittoken2, single);
-   this.innow.runfuncswap(this.ws);
+    let runerr = await this.innow.runfuncswap(this.ws);
+  console.log('runerr' + runerr);   
+     if(runerr !== undefined){
+      this.stopnow();
+         single.emit('removethisgo', this.chain, this.dex, this.tokenname2, this.tokenname1,
+    this.pricein);
+    }
 
+}
+catch(error){
+console.log(error);
+}
 }
 
 

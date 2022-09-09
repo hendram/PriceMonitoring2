@@ -29,7 +29,7 @@ const tradeToken2ForToken1 = new Trade(routeToken2ForToken1,
  " Token1 for 1 Token2"
  return Token2Token1;
 }
-catch(error){
+ catch(error){
 console.error(error)
 }
 

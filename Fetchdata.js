@@ -118,6 +118,23 @@ if(thisbound.countremovefunc < 1){
 single.on('removethists', thisbound.removefunc);
 }
 
+
+thisbound.removego = (arg1, arg2, arg3, arg4, arg5) => {
+   let messagenya = {removegom: {chain: arg1, dex: arg2, tokenname2: arg3, tokenname1: arg4,
+     pricein: arg5}}; 
+    self.processmess(JSON.stringify(messagenya), ws).then(() => {
+      ws.send(JSON.stringify(messagenya));
+                         
+});       
+}
+
+thisbound.countremovego = single.listenerCount('removethisgo', 
+thisbound.removego);
+if(thisbound.countremovego < 1){
+  
+single.on('removethisgo', thisbound.removego);
+}
+
  }); //ws.onmessage closing 
 
  })

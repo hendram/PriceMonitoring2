@@ -92,6 +92,37 @@ if(this.pongcount < 1){
       }, 10000);
 }};
 
+
+async removeerr(argerr){
+try{
+    let goarrdel = NaN;
+    let timestampthreemonth = ""
+    console.log('masuk neh removeerr');
+     for(let a = 0; a < this.goarr.length; a++){
+        if((this.goarr[a].chain === argerr.chain) &&
+     (this.goarr[a].dex === argerr.dex) &&
+     (this.goarr[a].tokenname2 === argerr.tokenname2) &&
+    (this.goarr[a].tokenname1 === argerr.tokenname1) &&
+    (this.goarr[a].pricein === argerr.pricein)){
+        timestampthreemonth = this.goarr[a].threemonthstamp; 
+       this.goarr[a] = null;
+     goarrdel = a;
+} 
+}
+
+this.goarr.splice(goarrdel, 1);
+
+
+if(this.accountexist === "true" && timestampthreemonth !== ""){
+      await this.recycletoback(argerr);
+}
+
+} // closing for try
+catch(error){
+  console.log(error);
+}
+}
+
 async removetimestamp(argrem){
 try {
  let indexforts = NaN;
@@ -187,8 +218,7 @@ try{
      let threemonthnownew = threemonthnow + (argtot.extendorder * 90 * 24 * 3600 * 1000);
  //    let threemonthnownew = threemonthnow + (argtot.extendorder * 300 * 1000);
 
-    arraystamp.splice(argtot.idgraph, 1);
-         arraystamp.push(threemonthnownew);
+    arraystamp.splice(argtot.idgraph, 1, threemonthnownew);
 
           await updateaccountdb.updatedbaccount(this.accountid, arraystamp);
           await this.refilltimestamp();                                                    
@@ -366,6 +396,10 @@ async processmess(messagenya, ws){
        this.barumessage = JSON.parse(this.newmessage);
 console.log('isi dari barumessage neh' + JSON.stringify(this.barumessage));
 
+if(this.barumessage.removegom){
+   await this.removeerr(this.barumessage.removegom);
+}
+
 /* remember to using only string for first data as number only recognize after going inside function */
 
 if(this.barumessage.accountaddr){
@@ -417,11 +451,7 @@ if(this.accountexist === "true"){
 
 }
   
-/*
-if(this.barumessage.closedeh){
-     this.closing = "yes";
-}
-*/ 
+ 
 if(this.barumessage.datanya){
     let dsh = this.barumessage.datanya;
 

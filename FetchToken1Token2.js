@@ -20,12 +20,16 @@ digit2, single){
     this.single = single;
 }
 
-runfuncswap = (ws) => {
+runfuncswap = async (ws, callback) => {
 this.ws = ws;
 try{
-      this.fetchtok1tok2(this.chain, this.dex, this.tokenname1, 
+    let error = await this.fetchtok1tok2(this.chain, this.dex, this.tokenname1, 
 this.tokenname2, this.tokenadd1,
 this.tokenadd2, this.digit1, this.digit2);
+    console.log('error inside fetchtoken1token2' + error);
+   if(error !== undefined){
+       return error;
+} 
 }
 catch(error){
 console.error(error)
@@ -43,8 +47,8 @@ graphfunc(resultfromnodein) {
 //            this.single.emit('sendgraph', this.graphdataformat);
             }
 
-fetchtok1tok2 = async (chain, dex, tokenname1, tokenname2,tokenadd1, tokenadd2, 
-digit1, digit2) => {
+async fetchtok1tok2(chain, dex, tokenname1, tokenname2,tokenadd1, tokenadd2, 
+digit1, digit2) {
 
 try{
 let token1token2 = undefined;
@@ -69,7 +73,7 @@ tokenname2);
 
 }
 catch(error){
-console.error(error);
+ return error;
 }
 } 
 
