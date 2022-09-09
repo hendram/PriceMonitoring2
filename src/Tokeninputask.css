@@ -25,14 +25,6 @@
   align-items: center; /* x axix */
 }
 
-.divcontainertop {
-  display:flex;
-  flex-direction: row;
-  width: 100%;
-  height: fit-content;
-  justify-content: center;
-}
-
 .divtable {
   display: flex;
   flex-wrap: wrap;

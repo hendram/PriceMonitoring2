@@ -40,9 +40,11 @@ const LineChart: React.FC<props> = ({data, namatoken,tokenacuan,
 const resizeObserver = React.useRef<ResizeObserver>(new 
 ResizeObserver((entries: ResizeObserverEntry[]) => {
  entries.forEach(entry => {
+    if(entry.contentRect.width !== 0 && entry.contentRect.height !== 0){
 
      widhesetlc(id, entry.contentRect.width, entry.contentRect.height);
      console.log('entry contentRect' + entry.contentRect.width);
+}
   });
 }));
 

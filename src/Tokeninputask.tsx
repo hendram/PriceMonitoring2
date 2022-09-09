@@ -5,11 +5,10 @@ let namaclass = "";
 
 type props = {
  handleClicking: Function;
- passtokinput:  string;
  zeroset: number;
 }
 
-const Tokeninputask: React.FC<props> = ({handleClicking, passtokinput, zeroset}:
+const Tokeninputask: React.FC<props> = ({handleClicking,  zeroset}:
 props):
 ReactElement => {
 
@@ -30,14 +29,10 @@ if(tokenin.current !== null){
  
 }
 
-if(passtokinput === "yes"){
-namaclass="divcontainertop" }
-else if(passtokinput === "no"){
-namaclass="divcontainerbottom" }
 
 return(
 <>
-<div className={namaclass}>
+<div className="divcontainerbottom">
 <div className="divtable" >
 
 <div className="toprow">

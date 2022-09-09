@@ -39,6 +39,15 @@ body {
    margin-left: 5%;
 }
 
+
+.monitordivhid {
+   display: none;
+}
+
+.monitordivsh {
+   display: block;
+}
+
 .monitoring {
   color: #13e8cf;
    font-size: x-large;
@@ -51,27 +60,86 @@ body {
    height: fit-content;
 }
 
-.addgraph {
+.addgraphbutton {
    color: #13e8cf;
    font-size: x-large;
    font-family: serif;
 }
 
-.graphicsviewhid {
+
+.addtokendexghid {
+  display: none;
+}
+
+.addtokendexgsh {
+  display: block;
+  background-color: yellow;
+  width: fit-content;
+  height: fit-content; 
+  z-index: 999;
+  position: absolute;
+}
+
+.addtokendexgspan {
+  color: black;
+}
+
+.addtokendexgspan:hover {
+  color: red;
+}
+
+.addtokendexgpagedivhid {
    display: none;
 }
 
-.graphicsviewsh {
+.addtokendexgpagedivsh {
    display: block; /* default for inline is width:100% height: fit-content */
 }
 
-.monitorviewhid {
-   display: none;
+.viewgraphdiv {
+   display: block;
+   height: fit-content;
 }
 
-.monitorviewsh {
-   display: block;
+.viewgraphbutton {
+   color: #13e8cf;
+   font-size: x-large;
+   font-family: serif;
 }
+
+.viewgraphtokendexhid {
+  display: none;
+}
+
+.viewgraphtokendexsh {
+  display: block;
+  background-color: yellow;
+  width: fit-content;
+  height: fit-content; 
+  z-index: 999;
+  position: absolute;
+}
+
+
+.viewtokendexgspan {
+  color: black;
+}
+
+.viewtokendexgspan:hover {
+  color: red;
+}
+
+.tokendexgpagedivhid {
+  display: none;
+ }
+
+.tokendexgpagedivsh {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+
 
 .connectshdiv {
    display: block;

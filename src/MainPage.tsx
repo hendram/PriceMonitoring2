@@ -1,29 +1,18 @@
 import React, {useState, useRef, useEffect, createContext} from 'react';
 import WalletConnection from './WalletConnection';
-import GraphicsView from './GraphicsView';
-import MonitorView from './MonitorView';
+import AddTokenDexGPage from './AddTokenDexGPage';
+import MonitorPage from './MonitorPage';
+import TokenDexGPage from './TokenDexGPage';
 import Singletonws from './Singletonws';
 import TransferPage from './TransferPage';
 import topimage from './images/topimage.png';
 import './MainPage.css';
 import { MetaMaskInpageProvider } from '@metamask/providers';
 import {ethers} from 'ethers';
-import Emitter from './Emitter';
 
-interface AppContext1  {
-accountada: Function;
-}
 
 interface AppContext2  {
 showagaintrans: Function;
-}
-
-interface AppContext3  {
-showaddmenu: Function;
-}
-
-interface AppContext4 {
-graphicsshowm: Function;
 }
 
 type comingobject = {
@@ -31,10 +20,7 @@ from: string;
 id: number;
 }
 
-export const MainContext1 = React.createContext<AppContext1 | null>(null);
 export const MainContext2 = React.createContext<AppContext2 | null>(null);
-export const MainContext3 = React.createContext<AppContext3 | null>(null);
-export const MainContext4 = React.createContext<AppContext4 | null>(null);
 
 const MainPage = () => {
 
@@ -44,13 +30,18 @@ const MainPage = () => {
 const [walletconn, setWalletconn] = useState({vis: "walletconnhid"});
 const [transferpage, setTransferpage] = useState({vis: "transferpagehid"});
 const [addmenu, setAddmenu] = useState({vis: "addmenuhid"});
-const [addts, setAddts] = useState({vis: "addtshid"});
+const [menubranch, setMenubranch] = useState({addtokendexg: "addtokendexghid", 
+viewgraphtokendex: "viewgraphtokendexhid", addts: "addtshid"});
 const wsock = useRef<WebSocket>(Singletonws.getInstance());
 
-const [graphicsviewdiv, setGraphicsviewdiv] = useState({
-togglegv: "graphicsviewhid", yesno: "no", formember: "no"});
-const [monitorviewdiv, setMonitorviewdiv] = useState({
+const [pagecontentdiv, setPagecontentdiv] = useState({monitordiv: "monitordivsh", 
+addtokendexgpagediv: "addtokendexgpagedivhid", tokendexgpagediv: "tokendexgpagedivhid"});
+
+ const [graphicspagelock, setGraphicspagelock] = useState({yesno: "no", formember: "no"});
+/* const [monitorviewdiv, setMonitorviewdiv] = useState({
 togglemon: "monitorviewsh" });
+*/
+
 const [walletbutton, setWalletbutton] = useState({
 connectdiv: "connectshdiv", transferdiv: "transferhiddiv", connecteddiv: "connectedhiddiv" });
 const accountkeep = useRef<string>("");
@@ -67,21 +58,11 @@ const coming = useRef<comingobject>({from: "", id: NaN});
 
 window.addEventListener('unload', function(event){
           Singletonws.removeInstance();
-   //       wsock.current.send(JSON.stringify({closedeh: "yes"}));
             wsock.current.close();  
 
 // don't use onclose, that for executing something after receiving
 // close event from server 
   });
-
- 
-const addginit = (initval: string) => {
-          if(initval === "yes"){
-       let newgraphicsviewdiv = {togglegv: "graphicsviewsh", yesno: "no", formember: "no"};
-            setGraphicsviewdiv(newgraphicsviewdiv);
-
-}
-}
 
 
 const tutup = (val: string) => {
@@ -126,17 +107,6 @@ connecteddiv: "connectedhiddiv"}
 }
 }
 
-/*
-useEffect(() => {
-     if (tobannerdiv.current !== null){
-    
-  let newbannerdivh = tobannerdiv.current.clientHeight.toString() + 'px';
-     setBannerdivh(newbannerdivh);    
-
-console.log('bannerdiv ne' + tobannerdiv.current.clientHeight);
-
-}}, [tobannerdiv]);
-*/
 
 const showagaintrans = (id: number) => {
    let newtransferpage = transferpage;
@@ -178,16 +148,13 @@ connecteddiv: "connectedhiddiv"}
 }
 
 const graphicsshowm = () => {
-    let newgraphicsviewdiv = { togglegv: "graphicsviewsh", yesno: "no", formember: "yes"}
+  /*  let newgraphicsviewdiv = { togglegv: "graphicsviewsh", yesno: "no", formember: "yes"}
          setGraphicsviewdiv(newgraphicsviewdiv);
  let newmonitorviewdiv = {togglemon: "monitorviewhid"};   
-    setMonitorviewdiv(newmonitorviewdiv);
+    setMonitorviewdiv(newmonitorviewdiv);  */
 }
 
-const a: AppContext1 = { accountada }
 const b: AppContext2 = {showagaintrans}
-const c: AppContext3 = {showaddmenu }
-const d: AppContext4 = {graphicsshowm}
 
 const closetrans = (val: string) => {
         if(val === "true"){
@@ -198,11 +165,12 @@ const closetrans = (val: string) => {
          coming.current = {from: "", id: NaN};
         }
 }
-
+/*
  wsock.current.onmessage = (e) => {
            console.log(JSON.parse(e.data));
           Emitter.emit('messagews', e);
 }
+*/
 
 const handleConnect = (event: React.MouseEvent<HTMLButtonElement>) => {
    event.preventDefault();
@@ -232,45 +200,76 @@ const handleClickats = (event: React.MouseEvent<HTMLButtonElement>) => {
 
 const handleClickbm = (event: React.MouseEvent<HTMLButtonElement>) => {
        event.preventDefault();
-    if(addts.vis === "addtssh"){
-   let newaddts = addts;
-     newaddts = {vis: "addtshid"};
-     setAddts(newaddts);
+    if(menubranch.addts === "addtssh"){
+       let newmenubranch = {addtokendexg: "addtokendexghid", 
+viewgraphtokendex: "viewgraphtokendexhid", addts:"addtshid"};
+     setMenubranch(newmenubranch);
 }
    else {
-   let newaddts = addts;
-     newaddts = {vis: "addtssh"};
-     setAddts(newaddts);
+    let newmenubranch = {addtokendexg: "addtokendexghid", 
+viewgraphtokendex: "viewgraphtokendexhid", addts:"addtssh"};
+     setMenubranch(newmenubranch);
+
 }
 }
 
 const handleClickgv = (event: React.MouseEvent<HTMLSpanElement>) => {
        event.preventDefault();
 
-       if(graphicsviewdiv.togglegv === "graphicsviewhid"){
-     let newgraphicsviewdiv = {togglegv: "graphicsviewsh", yesno: graphicsviewdiv.yesno, 
-formember: graphicsviewdiv.formember};
-            setGraphicsviewdiv(newgraphicsviewdiv);
- let newmonitorviewdiv = {togglemon: "monitorviewhid"};   
-    setMonitorviewdiv(newmonitorviewdiv);
+if(pagecontentdiv.addtokendexgpagediv === "addtokendexgpagedivhid"){
+    let newpagecontentdiv = {monitordiv: "monitordivhid", 
+addtokendexgpagediv: "addtokendexgpagedivsh", tokendexgpagediv: "tokendexgpagedivhid" }
+       setPagecontentdiv(newpagecontentdiv);
+}
 
-         }
+}
 
-       if(graphicsviewdiv.togglegv === "graphicsviewsh"){
-   let newgraphicsviewdiv = {togglegv: "graphicsviewsh", yesno: "yes",
- formember: "no"};
-            setGraphicsviewdiv(newgraphicsviewdiv);
+const handleClickvg = (event: React.MouseEvent<HTMLSpanElement>) => {
+       event.preventDefault();
+if(pagecontentdiv.tokendexgpagediv === "tokendexgpagedivhid"){
+   let newpagecontentdiv = {monitordiv: "monitordivhid", 
+addtokendexgpagediv: "addtokendexgpagedivhid", tokendexgpagediv: "tokendexgpagedivsh" }
+       setPagecontentdiv(newpagecontentdiv);
+}
+}
+
+const handleEnterg = (event: React.MouseEvent<HTMLButtonElement>) => {
+          event.preventDefault();
+ if(menubranch.addtokendexg === "addtokendexgsh"){
+       let newmenubranch = {addtokendexg: "addtokendexghid", 
+viewgraphtokendex: "viewgraphtokendexhid", addts:"addtshid"};
+     setMenubranch(newmenubranch);
+}
+   else {
+ let newmenubranch = {addtokendexg: "addtokendexgsh", 
+viewgraphtokendex: "viewgraphtokendexhid", addts:"addtshid"};
+     setMenubranch(newmenubranch);
+}
+}
+
+
+const handleEnterv = (event: React.MouseEvent<HTMLButtonElement>) => {
+          event.preventDefault();
+ if(menubranch.viewgraphtokendex === "viewgraphtokendexsh"){
+       let newmenubranch = {addtokendexg: "addtokendexghid", 
+viewgraphtokendex: "viewgraphtokendexhid", addts:"addtshid"};
+     setMenubranch(newmenubranch);
+}
+   else {
+  let newmenubranch = {addtokendexg: "addtokendexghid", 
+viewgraphtokendex: "viewgraphtokendexsh", addts:"addtshid"};
+     setMenubranch(newmenubranch);
 }
 }
 
 const handleClickmon = (event: React.MouseEvent<HTMLSpanElement>) => {
     event.preventDefault();
-    let newmonitorviewdiv = {togglemon: "monitorviewsh"};   
-    setMonitorviewdiv(newmonitorviewdiv);
+   if(pagecontentdiv.monitordiv === "monitordivhid"){
+   let newpagecontentdiv = {monitordiv: "monitordivsh", 
+addtokendexgpagediv: "addtokendexgpagedivhid", tokendexgpagediv: "tokendexgpagedivhid" }
+       setPagecontentdiv(newpagecontentdiv);
+}
 
- let newgraphicsviewdiv = {togglegv: "graphicsviewhid", yesno: graphicsviewdiv.yesno, 
-    formember: graphicsviewdiv.formember};
-            setGraphicsviewdiv(newgraphicsviewdiv);
          }
      
 const providertomain = (providerhere: MetaMaskInpageProvider) => {
@@ -349,15 +348,15 @@ return(
 </span>
 </div>
 <div className="addgraphdiv">
-<button onMouseEnter={(e) => handleEnterg(e)} className="addgraph">Add Graph</button>
-<div className="addgraphtokendex">
-<span onClick={(e) => handleClickgv(e)} className="addgraph">Add Token DEX Graph</span>
+<button onMouseEnter={(e) => handleEnterg(e)} className="addgraphbutton">Add Graph</button>
+<div className={menubranch.addtokendexg}>
+<span onClick={(e) => handleClickgv(e)} className="addtokendexgspan">Add Token DEX Graph</span>
 </div>
 </div>
 <div className="viewgraphdiv">
-<button onMouseEnter={(e) => handleEnterv(e)} className="addgraph">View Graph</button>
-<div className="viewgraphtokendex">
-<span onClick={(e) => handleClickvg(e)} className="addgraph">View Token DEX Graph</span>
+<button onMouseEnter={(e) => handleEnterv(e)} className="viewgraphbutton">View Graph</button>
+<div className={menubranch.viewgraphtokendex}>
+<span onClick={(e) => handleClickvg(e)} className="viewtokendexgspan">View Token DEX Graph</span>
 </div>
 </div>
 <div className={walletbutton.connectdiv}>
@@ -373,27 +372,26 @@ onClick={(e) => handleTransfer(e)} > Transfer </button>
 </div>
 <div className={addmenu.vis} >
 <button className="buttonmenu" onClick={(e) => handleClickbm(e)} >&#926;</button>
-<div className={addts.vis}   style={{right: '0px'}}>
+<div className={menubranch.addts}   style={{right: '0px'}}>
 <button className="buttonaddsub" onClick={(e) => handleClickats(e)} >Add Subscription</button>
 </div>    {/* div addts inside addmenu because only have 1 parent */}
 </div>
 </div>    {/* end of banner div */}
 
-<div className={monitorviewdiv.togglemon} >
-<MonitorView />
+<div className={pagecontentdiv.monitordiv} >
+<MonitorPage />
 </div>
 
-<div className={graphicsviewdiv.togglegv}>
-<MainContext1.Provider value={a} >
-<MainContext2.Provider value={b} >
-<MainContext3.Provider value={c} >
-<MainContext4.Provider value={d} >
-<GraphicsView wss={wsock.current} addg={graphicsviewdiv.yesno} returnback={addginit} 
-initmember={graphicsviewdiv.formember}/>
-</MainContext4.Provider>
-</MainContext3.Provider>
+
+<div className={pagecontentdiv.addtokendexgpagediv}>
+<AddTokenDexGPage />
+</div>
+
+<div className={pagecontentdiv.tokendexgpagediv}>
+<MainContext2.Provider value={b}>
+ <TokenDexGPage websock={wsock.current} accountexornot={accountada}
+showaddmenunow={showaddmenu} graphicsshownow={graphicsshowm} />
 </MainContext2.Provider>
-</MainContext1.Provider>
 </div>
 
 <div className={walletconn.vis}>

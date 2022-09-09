@@ -1,19 +1,34 @@
 import React, {useRef, useState, ReactElement} from 'react';
 import './TokenPage.css';
-
+import Emitter from './Emitter';
 
 type props = {
 id: number;
 numberlist: Function;
-eachtoken: Function;
-counterset: number;
 }
 
 
-const TokenPage: React.FC<props> = ({id, numberlist, eachtoken, 
-counterset}: props): ReactElement => {
+type Listdatain = {
+id: number;
+chain: string;
+dex: string;
+pricein: string;
+tokenname1: string;
+tokenaddress1: string;
+digittoken1: string;
+tokenname2: string;
+tokenaddress2: string;
+digittoken2: string;
+milisecondselapse: number;
+currentts: number;
+ntimes: number;
+threemonthstamp: string;
+}
+
+
+const TokenPage: React.FC<props> = ({id, numberlist}: props): ReactElement => {
 //rerendertp use to rerender tokenpage in case user fill in pricein not right and make counterset up
-const [rerendertp, setRerendertp] = useState(counterset);
+const countererr = useRef<number>(0);
 
 const chain = useRef<HTMLSelectElement>(null);
 const dex = useRef<HTMLSelectElement>(null);
@@ -31,12 +46,6 @@ const tokenname2 = useRef<HTMLInputElement>(null);
 const tokenaddress2 = useRef<HTMLInputElement>(null);
 const digittoken2 = useRef<HTMLInputElement>(null);
 
-if(counterset !== 0){
-    let newrerendertp = rerendertp;
-       newrerendertp = counterset;
-      setRerendertp(newrerendertp);
-}
-
 
 const handleCancel = (event: React.MouseEvent<HTMLButtonElement>) => {
        event.preventDefault();
@@ -44,6 +53,24 @@ console.log(id);
 
 numberlist(id);
 }
+
+const eachtokendata = (input: any) => {
+    if((isNaN(Number(input.pricein))) ||
+ (/\s/g.test(input.pricein))) {
+    if(countererr.current === 1000000) {
+    countererr.current = 1;
+}
+ else {
+       countererr.current =
+countererr.current = countererr.current + 1;
+       }
+}
+else {
+Emitter.emit('tokendexgdata', input);
+     numberlist(id);
+}
+}
+
 
 const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
      event.preventDefault();
@@ -98,7 +125,8 @@ threemonthstamp: ""
 }
 
 console.log("dataToken" + dataToken);
-eachtoken(dataToken);
+
+eachtokendata(dataToken);
 }
 }
 
