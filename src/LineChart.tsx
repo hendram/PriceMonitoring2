@@ -212,7 +212,7 @@ pricein</text>
 <text x={initxpos + xtextrect} y={ydata + yaddtext} fill="black" 
 style={{font: '1em bold sans-serif'}} >
 profit price</text>
-<text x={initxpos + xtextrect} y={ydata + yaddtext + 20} fill="black" 
+<text x={(initxpos + xtextrect/2)} y={ydata + yaddtext + 40} fill="black" 
 style={{font: '1em bold sans-serif'}}  className={showtsbelow}>
  {showtsnow}      
 </text>

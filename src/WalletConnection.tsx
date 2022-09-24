@@ -2,7 +2,7 @@ import React, { useState, ReactElement } from 'react';
 import './WalletConnection.css';
 import Metamsk from './images/metamask.png';
 import { ethers } from 'ethers';
-import Closingbuttonwal from './Closingbuttonwal';
+import Closingbutton from './Closingbutton';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { MetaMaskInpageProvider } from '@metamask/providers';
 
@@ -14,6 +14,7 @@ type props = {
 
 const WalletConnection: React.FC<props> = ({websock, closingwal, providerwal}: props): 
 ReactElement => {
+let provider: any = null;
 
 const beginconnect = async () => {
 const provide: unknown = await detectEthereumProvider();
@@ -33,7 +34,7 @@ async function startApp(provide: object) {
    console.error('Do you have multiple wallets installed?');
    }
       else{
-   const provider =  provide as MetaMaskInpageProvider;
+   provider =  provide as MetaMaskInpageProvider;
 
    const chainId = await provider.request({method: 'eth_chainId' });
    if(typeof chainId === "string"){
@@ -65,8 +66,10 @@ async function getAccount(provider: MetaMaskInpageProvider){
       if(connacct && Array.isArray(connacct)){
         accountChange(connacct[0], provider);
    }
+}
 
- provider.on('accountsChanged', (accounts) => {  
+if(provider !== null) {
+ provider.on('accountsChanged', (accounts: string) => {  
       console.log('account dari getAccount' + JSON.stringify(accounts));
        if(accounts && Array.isArray(accounts)){
         accountChange(accounts[0], provider);
@@ -81,7 +84,6 @@ async function getAccount(provider: MetaMaskInpageProvider){
       }  */   
 }
 });
-
 }
 
 async function changedchain(provider: MetaMaskInpageProvider){
@@ -152,7 +154,7 @@ beginconnect();
     return(
 <div className="wallconndiv">
 <div className="closingwaldiv">
-   <Closingbuttonwal closewal={closingwal}/>
+   <Closingbutton close={closingwal}/>
 </div>
 <div>
   <img src={Metamsk} width="120" height="120" onClick={(e) => metconnect(e)}>

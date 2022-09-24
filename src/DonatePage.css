@@ -1,0 +1,103 @@
+.donatepagediv {
+ position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: fit-content;
+  height: fit-content;
+  background-color: #edeb16;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+  justify-content: center; /* x axis */
+  align-items: center; /* y axis */
+}
+
+
+.donatediv {
+ width: 100%;
+  height: fit-content;
+ text-align: justify;
+ text-justify: inter-word;
+ padding: 2%;
+}
+
+.donatespan {
+ width: fit-content;
+ height: auto;
+ font-size: 1.5em;
+ font-family: sans-serif;
+ word-wrap: break-word;
+
+}
+
+.divrowdonate {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   width: fit-content;
+   height: fit-content;
+   align-self: auto;
+   padding-bottom: 2%;
+}
+
+.inputdiv {
+   width: fit-content;
+   height: fit-content;
+}
+
+.usdctoken {
+  width: 10vw;
+  margin-right: 1vw;
+}
+
+.usdcspandiv {
+   width: fit-content;
+   height: fit-content;
+}
+
+.usdctext{
+ font-size: 1.5em;
+ font-family: sans-serif;
+}
+ 
+.connectpolygonsh {
+   display: block;
+}
+
+.connectpolygonhid {
+   display: none;
+}
+
+.donatebuttonsh {
+   display: block;
+}
+
+.donatebuttonhid {
+   display: none;
+}
+
+.connectpoly {
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 250;
+  border-radius: 10px;
+  color: red;
+  outline: none;
+}
+
+.donatesubmit {
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 250;
+  border-radius: 10px;
+  color: red;
+  outline: none;
+}
+
+.closingdondiv {
+  width: fit-content;
+  height: fit-content;
+  align-self: flex-end;
+}

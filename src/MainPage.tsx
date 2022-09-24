@@ -5,11 +5,12 @@ import MonitorPage from './MonitorPage';
 import TokenDexGPage from './TokenDexGPage';
 import Singletonws from './Singletonws';
 import TransferPage from './TransferPage';
+import DonatePage from './DonatePage';
 import topimage from './images/topimage.png';
 import './MainPage.css';
 import { MetaMaskInpageProvider } from '@metamask/providers';
 import {ethers} from 'ethers';
-
+import BurgerMenu from './BurgerMenu';
 
 interface AppContext2  {
 showagaintrans: Function;
@@ -29,6 +30,7 @@ const MainPage = () => {
 
 const [walletconn, setWalletconn] = useState({vis: "walletconnhid"});
 const [transferpage, setTransferpage] = useState({vis: "transferpagehid"});
+const [donatepage, setDonatepage] = useState({vis: "donatehiddiv"});
 const [addmenu, setAddmenu] = useState({vis: "addmenuhid"});
 const [menubranch, setMenubranch] = useState({addtokendexg: "addtokendexghid", 
 viewgraphtokendex: "viewgraphtokendexhid", addts: "addtshid"});
@@ -38,20 +40,14 @@ const [pagecontentdiv, setPagecontentdiv] = useState({monitordiv: "monitordivsh"
 addtokendexgpagediv: "addtokendexgpagedivhid", tokendexgpagediv: "tokendexgpagedivhid"});
 
  const [graphicspagelock, setGraphicspagelock] = useState({yesno: "no", formember: "no"});
-/* const [monitorviewdiv, setMonitorviewdiv] = useState({
-togglemon: "monitorviewsh" });
-*/
 
 const [walletbutton, setWalletbutton] = useState({
 connectdiv: "connectshdiv", transferdiv: "transferhiddiv", connecteddiv: "connectedhiddiv" });
 const accountkeep = useRef<string>("");
 const balancekeep = useRef<string>("");
 const providerkeep = useRef<MetaMaskInpageProvider | null>(null);
-// const tobannerdiv = useRef<HTMLButtonElement>(null);
-// const [bannerdivh, setBannerdivh] = useState<string>();
+const providerdonate = useRef<MetaMaskInpageProvider | null>(null);
 const coming = useRef<comingobject>({from: "", id: NaN});
-
-//const ethereum = window.ethereum as MetaMaskInpageProvider;
 
       wsock.current.onopen = () => {
 }
@@ -67,11 +63,82 @@ window.addEventListener('unload', function(event){
 
 const tutup = (val: string) => {
         if(val === "true"){
-        let newwalletconn = walletconn;
-    newwalletconn = {vis: "walletconnhid"};
+    let newwalletconn = {vis: "walletconnhid"};
     setWalletconn(newwalletconn);
         }
 }
+
+
+const tutupdon = (val: string) => {
+        if(val === "true"){
+    let newdonatepage = {vis: "donatehiddiv"};
+    setDonatepage(newdonatepage);
+        }
+}
+
+let nVer = navigator.appVersion;
+let nAgt = navigator.userAgent;
+let browserName  = navigator.appName;
+let fullVersion  = ''+parseFloat(navigator.appVersion); 
+let majorVersion = parseInt(navigator.appVersion,10);
+let nameOffset,verOffset,ix;
+
+// In Opera, the true version is after "Opera" or after "Version"
+if ((verOffset=nAgt.indexOf("Opera"))!=-1) {
+ browserName = "Opera";
+ fullVersion = nAgt.substring(verOffset+6);
+ if ((verOffset=nAgt.indexOf("Version"))!=-1) 
+   fullVersion = nAgt.substring(verOffset+8);
+}
+// In MSIE, the true version is after "MSIE" in userAgent
+else if ((verOffset=nAgt.indexOf("MSIE"))!=-1) {
+ browserName = "Microsoft Internet Explorer";
+ fullVersion = nAgt.substring(verOffset+5);
+}
+// In Chrome, the true version is after "Chrome" 
+else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {
+ browserName = "Chrome";
+ fullVersion = nAgt.substring(verOffset+7);
+}
+// In Safari, the true version is after "Safari" or after "Version" 
+else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {
+ browserName = "Safari";
+ fullVersion = nAgt.substring(verOffset+7);
+ if ((verOffset=nAgt.indexOf("Version"))!=-1) 
+   fullVersion = nAgt.substring(verOffset+8);
+}
+// In Firefox, the true version is after "Firefox" 
+else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
+ browserName = "Firefox";
+ fullVersion = nAgt.substring(verOffset+8);
+}
+// In most other browsers, "name/version" is at the end of userAgent 
+else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) < 
+          (verOffset=nAgt.lastIndexOf('/')) ) 
+{
+ browserName = nAgt.substring(nameOffset,verOffset);
+ fullVersion = nAgt.substring(verOffset+1);
+ if (browserName.toLowerCase()==browserName.toUpperCase()) {
+  browserName = navigator.appName;
+ }
+}
+// trim the fullVersion string at semicolon/space if present
+if ((ix=fullVersion.indexOf(";"))!=-1)
+   fullVersion=fullVersion.substring(0,ix);
+if ((ix=fullVersion.indexOf(" "))!=-1)
+   fullVersion=fullVersion.substring(0,ix);
+
+majorVersion = parseInt(''+fullVersion,10);
+if (isNaN(majorVersion)) {
+ fullVersion  = ''+parseFloat(navigator.appVersion); 
+ majorVersion = parseInt(navigator.appVersion,10);
+}
+
+console.log('Browser name  = '+ browserName  +
+ 'Full version  = '+ fullVersion +
+ 'Major version = ' + majorVersion + 
+ 'navigator.appName = ' +navigator.appName +
+ 'navigator.userAgent = ' +navigator.userAgent);
 
 function toconnected(){
  
@@ -107,7 +174,7 @@ connecteddiv: "connectedhiddiv"}
 }
 }
 
-
+ 
 const showagaintrans = (id: number) => {
    let newtransferpage = transferpage;
     newtransferpage = {vis: "transferpagesh"};
@@ -147,17 +214,23 @@ connecteddiv: "connectedhiddiv"}
 }
 }
 
+   
 const graphicsshowm = () => {
-  /*  let newgraphicsviewdiv = { togglegv: "graphicsviewsh", yesno: "no", formember: "yes"}
-         setGraphicsviewdiv(newgraphicsviewdiv);
- let newmonitorviewdiv = {togglemon: "monitorviewhid"};   
-    setMonitorviewdiv(newmonitorviewdiv);  */
+        let newpagecontentdiv = {monitordiv: "monitordivhid", 
+addtokendexgpagediv: "addtokendexgpagedivhid", tokendexgpagediv: "tokendexgpagedivsh" }
+       setPagecontentdiv(newpagecontentdiv);
+
+  let newtransferpage = {vis: "transferpagehid"};
+    setTransferpage(newtransferpage);
+
+     coming.current = {from: "", id: NaN};
 }
 
 const b: AppContext2 = {showagaintrans}
 
 const closetrans = (val: string) => {
         if(val === "true"){
+
         let newtransferpage = transferpage;
     newtransferpage = {vis: "transferpagehid"};
     setTransferpage(newtransferpage);
@@ -165,28 +238,42 @@ const closetrans = (val: string) => {
          coming.current = {from: "", id: NaN};
         }
 }
-/*
- wsock.current.onmessage = (e) => {
-           console.log(JSON.parse(e.data));
-          Emitter.emit('messagews', e);
-}
-*/
 
 const handleConnect = (event: React.MouseEvent<HTMLButtonElement>) => {
    event.preventDefault();
-   let newwalletconn = walletconn;
-    newwalletconn = {vis: "walletconnsh"};
+    let newwalletconn = {vis: "walletconnsh"};
     setWalletconn(newwalletconn);
+    if(donatepage.vis === "donateshdiv"){
+    let newdonatepage = {vis: "donatehiddiv"};
+     setDonatepage(newdonatepage);
+}
 }
 
 
 const handleTransfer = (event: React.MouseEvent<HTMLButtonElement>) => {
    event.preventDefault();
-   let newtransferpage = transferpage;
-    newtransferpage = {vis: "transferpagesh"};
+    let newtransferpage = {vis: "transferpagesh"};
     setTransferpage(newtransferpage);
 
    coming.current = {from: "", id: NaN};
+    if(donatepage.vis === "donateshdiv"){
+    let newdonatepage = {vis: "donatehiddiv"};
+     setDonatepage(newdonatepage);
+}
+}
+
+const handleDonate = (event: React.MouseEvent<HTMLButtonElement>) => {
+   event.preventDefault();
+    let newdonatepage = {vis: "donateshdiv"};
+     setDonatepage(newdonatepage);
+   if(transferpage.vis === "transferpagesh"){
+       let newtransferpage = {vis: "transferpagehid"};
+        setTransferpage(newtransferpage);
+    }
+  if(walletconn.vis === "walletconnsh"){
+  let newwalletconn = {vis: "walletconnhid"};
+    setWalletconn(newwalletconn);
+}
 }
 
 const handleClickats = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -199,7 +286,8 @@ const handleClickats = (event: React.MouseEvent<HTMLButtonElement>) => {
 }
 
 const handleClickbm = (event: React.MouseEvent<HTMLButtonElement>) => {
-       event.preventDefault();
+      event.preventDefault();
+
     if(menubranch.addts === "addtssh"){
        let newmenubranch = {addtokendexg: "addtokendexghid", 
 viewgraphtokendex: "viewgraphtokendexhid", addts:"addtshid"};
@@ -283,6 +371,31 @@ connecteddiv: "connectedhiddiv"}
       
 }      
 
+const providerdonatetomain = (providerdonatemain: MetaMaskInpageProvider) => {
+    providerdonate.current = providerdonatemain;
+}
+
+async function senddonatefuncmain(donateval: number, accountdonate: string){
+try{
+if(providerdonate.current){
+const TransParam = {
+       to: '0xB080b617c9c4C74f0A69291Bfe92f3Ca4579DCdF',
+       from: accountdonate,
+       value:  Number(donateval * 1e18).toString(16), //value is in Hex format
+       chainId: ethers.utils.hexValue(137),
+};
+
+const txHash = await providerdonate.current.request({
+         method: 'eth_sendTransaction',
+         params: [TransParam],
+ });
+}
+}
+catch(error) {
+ console.log(error);
+}
+}
+
 async function sendtransfuncmain(pricemain: number) {
 try{
  if(providerkeep.current){
@@ -342,13 +455,14 @@ return(
 <div className="topimagediv" >
 <img src={topimage} className="topimageimg"></img>
 </div>
-<div className="bannerdiv" >
-<div className="monitoringdiv">
+<div className="bannerdiv"  >
+<div className="monitoringdiv" >
 <span onClick={(e) => handleClickmon(e)} className="monitoring">Monitoring
 </span>
 </div>
 <div className="addgraphdiv">
-<button onMouseEnter={(e) => handleEnterg(e)} className="addgraphbutton">Add Graph</button>
+<button onMouseEnter={(e) => handleEnterg(e)} className="addgraphbutton"
+ > Add Graph</button>
 <div className={menubranch.addtokendexg}>
 <span onClick={(e) => handleClickgv(e)} className="addtokendexgspan">Add Token DEX Graph</span>
 </div>
@@ -370,8 +484,14 @@ onClick={(e) => handleTransfer(e)} > Transfer </button>
 <div className={walletbutton.connecteddiv}>
 <button className="buttonconnected"> Connected </button>
 </div>
+<div className="donationbutton">
+<button className="buttondonate"
+onClick={(e) => handleDonate(e)} > Donate </button>
+</div>
 <div className={addmenu.vis} >
-<button className="buttonmenu" onClick={(e) => handleClickbm(e)} >&#926;</button>
+<button className="buttonmenu" onClick={(e) => handleClickbm(e)} >
+<BurgerMenu />
+</button>
 <div className={menubranch.addts}   style={{right: '0px'}}>
 <button className="buttonaddsub" onClick={(e) => handleClickats(e)} >Add Subscription</button>
 </div>    {/* div addts inside addmenu because only have 1 parent */}
@@ -405,6 +525,10 @@ accountpass={accountkeep.current}
 closingtrans={closetrans} />
  </div>
 
+<div className={donatepage.vis}>
+<DonatePage websock={wsock.current} senddonatefunc={senddonatefuncmain} 
+providerdon={providerdonatetomain} closingdon={tutupdon}/>
+ </div>
 
 </>
 )

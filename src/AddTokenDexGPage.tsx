@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, ReactElement} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import TokenPage from './TokenPage';
 import Tokeninputask from './Tokeninputask';
 import './AddTokenDexGPage.css';

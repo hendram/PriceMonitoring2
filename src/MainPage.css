@@ -153,6 +153,19 @@ body {
   display: none;
 }
 
+
+.donateshdiv{
+  display: block;
+   width: fit-content;
+   height: fit-content;
+   margin-left: auto;
+   margin-right: 5%;
+}
+
+.donatehiddiv {
+   display: none;
+}
+
 .transfershdiv{
   display: block;
    width: fit-content;
@@ -175,6 +188,15 @@ body {
 
 .connectedhiddiv {
   display: none;
+}
+
+.buttonmenu {
+   border-radius: 10px;
+   color: #1618ed;
+   font-size: x-large;
+   font-family: serif;
+   background-color: #edeb16;
+   outline: none;
 }
 
 .buttonconnect {
@@ -204,7 +226,7 @@ body {
    outline: none;
 }
 
-.buttonmenu {
+.buttondonate {
    border-radius: 10px;
    color: #1618ed;
    font-size: x-large;

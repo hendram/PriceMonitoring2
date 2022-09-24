@@ -12,7 +12,7 @@ const TransferPage : React.FC<props> = ({accountpass,
 closingtrans, sendtransfunc}: props): ReactElement => {
 
 const graphordered = useRef<HTMLInputElement>(null);
-const [price, setPrice] = useState<number>(NaN);
+const [price, setPrice] = useState<number>(0);
 
 const Changeprice = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -21,6 +21,7 @@ const Changeprice = (event: React.ChangeEvent<HTMLInputElement>) => {
              newprice = (Number(graphordered.current.value)/10);
              setPrice(newprice);
 }
+
 }
 
 const handleCancel = (event: React.MouseEvent<HTMLButtonElement>) => {
