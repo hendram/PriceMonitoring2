@@ -36,7 +36,9 @@ console.log(this.setrun);
 }
 
 stopnow(){
+  if(this.setrun !== ""){
   clearInterval(this.setrun);
+}
 }
 
 threemonthstampchk(tms){
